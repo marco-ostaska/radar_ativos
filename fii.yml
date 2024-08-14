@@ -1,0 +1,38 @@
+fiagro:
+  spread: 8
+  tickers:
+    - ticker: "XPCA11"
+    - ticker: "VGIA11"
+    - ticker: "RZAG11"
+    - ticker: "FGAA11"
+    - ticker: "KNCA11"
+    - ticker: "RURA11"
+
+tijolo:
+  spread: 3
+  tickers:
+    - ticker: "HSML11"
+    - ticker: "XPML11"
+    - ticker: "HGBS11"
+    - ticker: "VISC11"
+    - ticker: "MAXR11"
+    - ticker: "HGRE11"
+    - ticker: "MALL11"
+    - ticker: "XPIN11"
+    - ticker: "HSLG11"
+    - ticker: "HGLG11"
+    - ticker: "XPLG11"
+    - ticker: "PATL11"
+    - ticker: "GARE11"
+    - ticker: "VILG11"
+    - ticker: "KNRI11"
+
+papel:
+  spread: 5
+  tickers:
+    - ticker: "KNSC11"
+    - ticker: "HSAF11"
+    - ticker: "KNCR11"
+    - ticker: "KNHY11"
+    - ticker: "BCRI11"
+    - ticker: "KNIP11"
