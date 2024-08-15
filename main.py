@@ -81,7 +81,7 @@ def radar():
     # add a separator
     st.markdown("---")
 
-    st.subheader("FIAGRO")
+    st.subheader("FIAGRO/Fi-Infra")
     fmt_radar("fiagro", data)
 
 

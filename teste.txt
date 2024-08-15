@@ -1,0 +1,220 @@
+{'52WeekChange': -0.09546113,
+ 'SandP52WeekChange': 0.24822903,
+ 'address1': 'Praia de Botafogo 186',
+ 'address2': 'offices 1101, 1701 and 1801 Botafogo',
+ 'ask': 55.96,
+ 'auditRisk': 6,
+ 'averageDailyVolume10Day': 27636490,
+ 'averageVolume': 20852542,
+ 'averageVolume10days': 27636490,
+ 'beta': 0.928,
+ 'bid': 55.98,
+ 'boardRisk': 2,
+ 'bookValue': 48.105,
+ 'city': 'Rio De Janeiro',
+ 'companyOfficers': [{'age': 59,
+                      'exercisedValue': 0,
+                      'maxAge': 1,
+                      'name': 'Mr. Eduardo  de Salles Bartolomeo',
+                      'title': 'President & CEO',
+                      'unexercisedValue': 0,
+                      'yearBorn': 1964},
+                     {'age': 45,
+                      'exercisedValue': 0,
+                      'maxAge': 1,
+                      'name': 'Mr. Gustavo Duarte Pimenta',
+                      'title': 'Executive VP of Finance & Investor Relations',
+                      'unexercisedValue': 0,
+                      'yearBorn': 1978},
+                     {'age': 60,
+                      'exercisedValue': 0,
+                      'maxAge': 1,
+                      'name': 'Mr. Carlos Henrique Senna Medeiros',
+                      'title': 'Executive Vice President of Operations',
+                      'unexercisedValue': 0,
+                      'yearBorn': 1963},
+                     {'exercisedValue': 0,
+                      'maxAge': 1,
+                      'name': 'Murilo  Muller',
+                      'title': 'Controllership Director & Chief Accountant',
+                      'unexercisedValue': 0},
+                     {'age': 43,
+                      'exercisedValue': 0,
+                      'maxAge': 1,
+                      'name': 'Mr. Rafael Jabur Bittar',
+                      'title': 'Executive Vice President of Technical',
+                      'unexercisedValue': 0,
+                      'yearBorn': 1980},
+                     {'exercisedValue': 0,
+                      'maxAge': 1,
+                      'name': 'Mr. Denis  Cuenca',
+                      'title': 'Chief Compliance Officer',
+                      'unexercisedValue': 0},
+                     {'age': 59,
+                      'exercisedValue': 0,
+                      'maxAge': 1,
+                      'name': 'Ms. Marina Barrenne De Artagao Quental',
+                      'title': 'Executive Vice President of People',
+                      'unexercisedValue': 0,
+                      'yearBorn': 1964},
+                     {'age': 54,
+                      'exercisedValue': 0,
+                      'maxAge': 1,
+                      'name': 'Mr. Alexandre Gomes Pereira',
+                      'title': 'Executive Vice President of Projects',
+                      'unexercisedValue': 0,
+                      'yearBorn': 1969},
+                     {'age': 61,
+                      'exercisedValue': 0,
+                      'maxAge': 1,
+                      'name': "Mr. Alexandre Silva D'Ambrosio",
+                      'title': 'Executive Vice-President of Corporate & '
+                               'External Affairs',
+                      'unexercisedValue': 0,
+                      'yearBorn': 1962},
+                     {'age': 50,
+                      'exercisedValue': 0,
+                      'maxAge': 1,
+                      'name': 'Mr. Marcello Magistrini Spinelli',
+                      'title': 'Executive Vice President of Iron Solutions',
+                      'unexercisedValue': 0,
+                      'yearBorn': 1973}],
+ 'compensationRisk': 1,
+ 'country': 'Brazil',
+ 'currency': 'BRL',
+ 'currentPrice': 56.0,
+ 'currentRatio': 1.079,
+ 'debtToEquity': 45.818,
+ 'dividendRate': 7.52,
+ 'dividendYield': 0.1342,
+ 'earningsGrowth': 2.279,
+ 'earningsQuarterlyGrowth': 2.191,
+ 'ebitda': 84191002624,
+ 'ebitdaMargins': 0.40073,
+ 'enterpriseToEbitda': 3.663,
+ 'enterpriseToRevenue': 1.468,
+ 'enterpriseValue': 308402552832,
+ 'exDividendDate': 1722816000,
+ 'exchange': 'SAO',
+ 'fiftyDayAverage': 60.7628,
+ 'fiftyTwoWeekHigh': 78.55,
+ 'financialCurrency': 'BRL',
+ 'firstTradeDateEpochUtc': 946900800,
+ 'fiveYearAvgDividendYield': 6.0,
+ 'floatShares': 3984538964,
+ 'forwardEps': 11.88,
+ 'forwardPE': 4.7138047,
+ 'freeCashflow': 37548748800,
+ 'gmtOffSetMilliseconds': -10800000,
+ 'governanceEpochDate': 1722470400,
+ 'grossMargins': 0.40662,
+ 'heldPercentInsiders': 0.11468001,
+ 'heldPercentInstitutions': 0.44848,
+ 'impliedSharesOutstanding': 4270899968,
+ 'industry': 'Other Industrial Metals & Mining',
+ 'industryDisp': 'Other Industrial Metals & Mining',
+ 'industryKey': 'other-industrial-metals-mining',
+ 'lastDividendDate': 1722816000,
+ 'lastDividendValue': 2.093798,
+ 'lastFiscalYearEnd': 1703980800,
+ 'lastSplitDate': 1188777600,
+ 'lastSplitFactor': '2:1',
+ 'longBusinessSummary': 'Vale S.A., together with its subsidiaries, produces '
+                        'and sells iron ore, iron ore pellets, nickel, and '
+                        'copper in Brazil and internationally. The company '
+                        'operates through Iron Solutions and Energy Transition '
+                        'Materials segments. The Iron Solutions segment '
+                        'produces and extracts iron ore and pellets, and other '
+                        'ferrous products; and provides related logistic '
+                        'services. The Energy Transition Materials segment '
+                        'produces and extracts nickel; and its by-products, '
+                        'such as gold, silver, cobalt, precious metals, and '
+                        'others, as well as copper used in the construction '
+                        'sector to produce pipes and electrical wires. The '
+                        'company was formerly known as Companhia Vale do Rio '
+                        'Doce and changed its name to Vale S.A. in May 2009. '
+                        'Vale S.A. was founded in 1942 and is headquartered in '
+                        'Rio De Janeiro, Brazil.',
+ 'longName': 'Vale S.A.',
+ 'marketCap': 239110471680,
+ 'maxAge': 86400,
+ 'messageBoardId': 'finmb_874225',
+ 'mostRecentQuarter': 1719705600,
+ 'netIncomeToCommon': 48729001984,
+ 'nextFiscalYearEnd': 1735603200,
+ 'numberOfAnalystOpinions': 13,
+ 'operatingCashflow': 61641998336,
+ 'operatingMargins': 0.30082,
+ 'overallRisk': 1,
+ 'payoutRatio': 0.48630002,
+ 'pegRatio': -0.01,
+ 'phone': '55 21 3485 5000',
+ 'previousClose': 56.52,
+ 'priceHint': 2,
+ 'priceToBook': 1.1641202,
+ 'priceToSalesTrailing12Months': 1.1381173,
+ 'profitMargins': 0.23194,
+ 'quickRatio': 0.694,
+ 'quoteType': 'EQUITY',
+ 'recommendationKey': 'buy',
+ 'recommendationMean': 2.4,
+ 'regularMarketPreviousClose': 56.52,
+ 'returnOnAssets': 0.094390005,
+ 'returnOnEquity': 0.24047,
+ 'revenueGrowth': 0.083,
+ 'revenuePerShare': 48.912,
+ 'sector': 'Basic Materials',
+ 'sectorDisp': 'Basic Materials',
+ 'sectorKey': 'basic-materials',
+ 'shareHolderRightsRisk': 10,
+ 'sharesOutstanding': 4269829888,
+ 'shortName': 'VALE        ON  EJ  NM',
+ 'state': 'RJ',
+ 'symbol': 'VALE3.SA',
+ 'targetHighPrice': 116.98,
+ 'targetLowPrice': 68.3,
+ 'targetMeanPrice': 87.35,
+ 'targetMedianPrice': 82.39,
+ 'timeZoneFullName': 'America/Sao_Paulo',
+ 'timeZoneShortName': 'BRT',
+ 'totalCash': 36356001792,
+ 'totalCashPerShare': 8.512,
+ 'totalDebt': 97733001216,
+ 'totalRevenue': 210092998656,
+ 'trailingAnnualDividendRate': 5.07,
+ 'trailingAnnualDividendYield': 0.08970276,
+ 'trailingEps': 12.36,
+ 'trailingPE': 4.5307446,
+ 'trailingPegRatio': None,
+ 'twoHundredDayAverage': 65.91735,
+ 'underlyingSymbol': 'VALE3.SA',
+ 'uuid': 'f01657cb-27f5-3bbb-acb6-7cdc40c5c279',
+ 'website': 'https://www.vale.com',
+ 'zip': '22250-145'}
+
+
+
+"TOTS3"
+"GOAU3"
+"VALE3"
+"CPFE3"
+"NEOE3"
+"SLCE3"
+"EQTL3"
+"KEPL3"
+"CSMG3"
+"EGIE3"
+"BBAS3"
+"SAPR3"
+"FLRY3"
+"BBDC4"
+"PETR3"
+"AGRO3"
+"BBSE3"
+"CMIG4"
+"PSSA3"
+"PRIO3"
+"CAML3"
+"CXSE3"
+"ITUB3"
+stocks = ["TOTS3", "GOAU3", "VALE3", "CPFE3", "NEOE3", "SLCE3", "EQTL3", "KEPL3", "CSMG3", "EGIE3", "BBAS3", "SAPR3", "FLRY3", "BBDC4", "PETR3", "AGRO3", "BBSE3", "CMIG4", "PSSA3", "PRIO3", "CAML3", "CXSE3", "ITUB3"]

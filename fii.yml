@@ -7,6 +7,11 @@ fiagro:
     - ticker: "FGAA11"
     - ticker: "KNCA11"
     - ticker: "RURA11"
+    - ticker: "BTRA11"
+    - ticker: "BTAL11"
+    - ticker: "XPID11"
+    - ticker: "IFRA11"
+    - ticker: "BDIF11"
 
 tijolo:
   spread: 3
