@@ -16,7 +16,6 @@ tijolo:
     - ticker: "HGBS11"
     - ticker: "VISC11"
     - ticker: "MAXR11"
-    - ticker: "HGRE11"
     - ticker: "MALL11"
     - ticker: "XPIN11"
     - ticker: "HSLG11"
@@ -24,8 +23,8 @@ tijolo:
     - ticker: "XPLG11"
     - ticker: "PATL11"
     - ticker: "GARE11"
-    - ticker: "VILG11"
     - ticker: "KNRI11"
+    - ticker: "HGRU11"
 
 papel:
   spread: 5

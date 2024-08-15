@@ -3,6 +3,7 @@ import streamlit as st
 import bancoCentral as bc
 import fii_st
 import yaml
+import scoreFII
 
 @st.cache_data(ttl=86400)  # Cache por 24 horas (86400 segundos)
 def melhor_indice():
@@ -30,7 +31,7 @@ def compare_status(compare1, compare2, text):
 
 def fmt_radar(tipo, data):
 
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4, col5 = st.columns(5)
 
     with col1:
         st.markdown('**Ativo:**')
@@ -40,12 +41,14 @@ def fmt_radar(tipo, data):
         st.markdown('**Valor Patrimonial:**')
     with col4:
         st.markdown('**Valor Teto por DY:**')
+    with col5:
+        st.markdown('**Nota:**')
 
     for ticker in data[tipo]["tickers"]:
         fi = fii.FII(f"{ticker['ticker']}.SA")
 
 
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3, col4, col5 = st.columns(5)
 
         with col1:
             st.info(fi.ticker)
@@ -56,6 +59,9 @@ def fmt_radar(tipo, data):
         with col4:
             spread = data[tipo]["spread"] + indice_base
             compare_status(fi.dividendo_estimado/spread*100, fi.cotacao, f"R$ {fi.dividendo_estimado/spread*100:.2f}")
+        with col5:
+            nota = scoreFII.evaluate_fii(fi, indice_base)
+            compare_status(nota, 6, f"{nota}")
 
 
 def radar():

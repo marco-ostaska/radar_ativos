@@ -1,4 +1,5 @@
 import fii
+import scoreFII
 import streamlit as st
 
 
@@ -43,7 +44,7 @@ def processar(ticker, indice_base):
 
         # Informações gerais
         st.subheader("Informações Gerais")
-        col1, col2 = st.columns(2)
+        col1, col2,col3 = st.columns(3)
 
         with col1:
             st.markdown('**Cotação:**')
@@ -51,6 +52,10 @@ def processar(ticker, indice_base):
         with col2:
             st.markdown('**DY (12M):**')
             st.info(f"{fi.dividend_yield * 100:.2f}%")
+        with col3:
+            st.markdown('**Nota:**')
+            nota = scoreFII.evaluate_fii(fi,indice_base)
+            compare_status(nota, 6, f"{nota}/10")
 
         # Linha de separação com cor customizada
         st.markdown("<hr style='background-color: #c4c4c4; height: 2px;'>", unsafe_allow_html=True)
