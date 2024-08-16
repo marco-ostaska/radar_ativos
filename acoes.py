@@ -68,7 +68,12 @@ class acao:
 
     @property
     def cotacao(self):
-        return self.acao.info['previousClose'] if 'previousClose' in self.acao.info else self.acao.info['ask']
+        if 'currentPrice' in self.acao.info:
+            return self.acao.info['currentPrice']
+        if 'previousClose' in self.acao.info:
+            return self.acao.info['previousClose']
+        return self.adj_close.iloc[-1]
+
 
     @property
     def margem_liquida(self):
@@ -80,7 +85,10 @@ class acao:
 
     @property
     def div_ebitda(self):
-        return self.acao.info['div_ebitda'] if 'div_ebitda' in self.acao.info else None
+        if 'totalDebt' not in self.acao.info or 'ebitda' not in self.acao.info:
+            return None
+        return self.acao.info['totalDebt'] / self.acao.info['ebitda']
+
 
     @property
     def dy(self):
@@ -103,14 +111,18 @@ class acao:
         return self.acao.info['profitMargins'] if 'profitMargins' in self.acao.info else None
 
     @property
+    def receita(self):
+        return self.acao.info['revenueGrowth'] if 'revenueGrowth' in self.acao.info else None
+
+    @property
     def dy_estimado(self):
         if 'dividendRate' in self.acao.info and 'currentPrice' in self.acao.info:
             return self.acao.info['dividendRate'] / self.acao.info['currentPrice']
-        return None
+        return 0
 
     @property
     def risco_geral(self):
-        return self.acao.info['overallRisk'] if 'overallRisk' in self.acao.info else None
+        return self.acao.info['overallRisk'] if 'overallRisk' in self.acao.info else 10
 
 
 
@@ -119,7 +131,7 @@ class acao:
 
 
 def main():
-    ativo = acao("POSI3.SA")
+    ativo = acao("VALE3.SA")
     print("Teto cotaçao x lucro:", ativo.teto_cotacao_lucro)
     print("Cotacao:", ativo.cotacao)
     print("Margem liquida:", ativo.margem_liquida)

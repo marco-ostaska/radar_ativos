@@ -72,9 +72,9 @@ def score_debt_to_ebitda(data):
     # checa se existe a chave totalDebt e EBITDA no dicionário
     if 'totalDebt' in data.info and 'ebitda' in data.info:
         debt_to_ebitda = data.info['totalDebt'] / data.info['ebitda']
-        if debt_to_ebitda < 3:
+        if debt_to_ebitda < 2:
             return 2
-        if debt_to_ebitda < 5:
+        if debt_to_ebitda < 3:
             return 1
     return 0
 

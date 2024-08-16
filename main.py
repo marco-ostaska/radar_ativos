@@ -5,6 +5,7 @@ import fii_st
 import yaml
 import scoreFII
 import acoes
+import acoes_st
 import score
 
 @st.cache_data(ttl=86400)  # Cache por 24 horas (86400 segundos)
@@ -99,7 +100,7 @@ def radar(indice_base):
 
     st.title("Radar de Ativos")
 
-    for tipo in ["tijolo", "papel", "fiagro"]:
+    for tipo in ["shopping", "logistica", "papel", "hibrido", "fiagro", "infra"]:
         st.subheader(tipo.upper())
         fmt_radar_fii(tipo, data, indice_base)
 
@@ -122,6 +123,8 @@ def main():
     if ticker:
         if chk_radio == "FII":
             fii_st.processar(ticker, indice_base)
+        if chk_radio == "Ações":
+            acoes_st.processar(ticker, indice_base)
     else:
         st.sidebar.warning("Por favor, insira o ticker de um FII para obter as informações.")
         radar(indice_base)
