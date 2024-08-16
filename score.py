@@ -128,6 +128,60 @@ def score_beta(data):
             return 2
     return 0
 
+def score_risco_geral(data):
+    if 'overallRisk' not in data.info:
+        return -2
+
+    if data.info['overallRisk'] >5:
+        return -3
+
+    if data.info['overallRisk'] == 1:
+        return 2
+
+    return 0
+
+
+
+def calculate_max_score():
+    max_score_trailingPE = 2  # Pontuação máxima para trailingPE
+    max_score_priceToBook = 2  # Pontuação máxima para priceToBook
+    max_score_priceToSales = 2  # Pontuação máxima para priceToSales
+    max_score_grossMargins = 2  # Pontuação máxima para grossMargins
+    max_score_operatingMargins = 2  # Pontuação máxima para operatingMargins
+    max_score_profitMargins = 2  # Pontuação máxima para profitMargins
+    max_score_earningsGrowth = 2  # Pontuação máxima para earningsGrowth
+    max_score_debt_to_ebitda = 2  # Pontuação máxima para debt_to_ebitda
+    max_score_revenueGrowth = 2  # Pontuação máxima para revenueGrowth
+    max_score_currentRatio = 2  # Pontuação máxima para currentRatio
+    max_score_quickRatio = 2  # Pontuação máxima para quickRatio
+    max_score_dividendYield = 2  # Pontuação máxima para dividendYield
+    max_score_payOutRatio = 2  # Pontuação máxima para payOutRatio
+    max_score_beta = 2  # Pontuação máxima para beta
+    max_score_risco_geral = 2  # Pontuação máxima para risco_geral
+
+    max_score =  (
+        max_score_trailingPE
+        + max_score_priceToBook
+        + max_score_priceToSales
+        + max_score_grossMargins
+        + max_score_operatingMargins
+        + max_score_profitMargins
+        + max_score_earningsGrowth
+        + max_score_debt_to_ebitda
+        + max_score_revenueGrowth
+        + max_score_currentRatio
+        + max_score_quickRatio
+        + max_score_dividendYield
+        + max_score_payOutRatio
+        + max_score_beta
+        + max_score_risco_geral
+    )
+    print(max_score)
+    return max_score
+
+
+
+
 def evaluate_company(data, indice_base=7):
     score = 0
     score += score_trailingPE(data)
@@ -144,9 +198,10 @@ def evaluate_company(data, indice_base=7):
     score += score_dividendYield(data, indice_base)
     score += score_payOutRatio(data)
     score += score_beta(data)
+    score += score_risco_geral(data)
 
     # Normalizando a pontuação para 0 a 10
-    max_score = 28  # Máximo possível
+    max_score = calculate_max_score()  # Máximo possível
     normalized_score = (score / max_score) * 10
 
     return round(normalized_score, 1)
@@ -158,53 +213,14 @@ def processar(data):
     company_score = evaluate_company(data)
     return f"{company_score:.1f}"
 
-ativos = [
-    "CSMG3",
-    "CMIG4",
-    "GGBR4",
-    "BBAS3",
-    "SAPR3",
-    "KEPL3",
-    "CPFE3",
-    "PSSA3",
-    "PETR3",
-    "NEOE3",
-    "BBSE3",
-    "SLCE3",
-    "FLRY3",
-    "CAML3",
-    "CXSE3",
-    "POSI3",
-    "EGIE3",
-    "TOTS3",
-    "VALE3",
-    "ITUB3",
-    "PRIO3",
-    "RENT3",
-    "RANI3",
-    "AGRO3",
-    "BBDC4",
-    "EKTR3",
-    "VIVA3",
-    "ALOS3",
-    "JALL3",
-    "MGLU3",
-    "GOAU3",
-    "EQTL3"
-]
 
-for a in ativos:
-    try:
-        data = yf.Ticker(f"{a}.SA")
-        nota = processar(data)
-        margemLiquida = data.info['profitMargins']
-        liquidezCorrente = data.info['currentRatio']
-        div_ebitda = data.info['totalDebt'] / data.info['ebitda']
-        dy = data.info['dividendYield']
-        roe = data.info['returnOnEquity']
-        profit = data.info['profitMargins']
-        cotacao = data.info['currentPrice']
-        dy_estimado = data.info['dividendRate'] / data.info['currentPrice']
-        print(f"{a} - Nota: {nota} - Margem Líquida: {margemLiquida} - Liquidez Corrente: {liquidezCorrente} - Dívida/EBITDA: {div_ebitda} - DY: {dy} - ROE: {roe} - Lucro: {profit} - Cotacao: {cotacao} - Dividendo Estimado: {dy_estimado}")
-    except Exception as e:
-        print(f"Erro ao processar {a}: {str(e)}")
+def main():
+
+    ativo = "VALE3.SA"
+    data = yf.Ticker(ativo)
+
+    print(evaluate_company(data))
+
+
+if __name__ == '__main__':
+    main()

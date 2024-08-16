@@ -1,5 +1,5 @@
-import fii
-import scoreFII
+import acoes
+import score
 import streamlit as st
 
 

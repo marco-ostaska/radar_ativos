@@ -4,6 +4,8 @@ import bancoCentral as bc
 import fii_st
 import yaml
 import scoreFII
+import acoes
+import score
 
 @st.cache_data(ttl=86400)  # Cache por 24 horas (86400 segundos)
 def melhor_indice():
@@ -16,8 +18,7 @@ def melhor_indice():
     except Exception as e:
         st.error(f"Erro ao obter o índices do Banco Central: usando valor default de 7 {str(e)}")
         return 7
-# Faz cache do indice_base
-indice_base = melhor_indice()
+
 
 def compare_status(compare1, compare2, text):
     if compare1 == None or compare2 == None:
@@ -29,7 +30,7 @@ def compare_status(compare1, compare2, text):
     else:
         st.error(f"{text}")
 
-def fmt_radar(tipo, data):
+def fmt_radar_head(tipo):
 
     col1, col2, col3, col4, col5 = st.columns(5)
 
@@ -38,11 +39,17 @@ def fmt_radar(tipo, data):
     with col2:
         st.markdown('**Cotação:**')
     with col3:
-        st.markdown('**Valor Patrimonial:**')
+        if tipo == "acoes":
+            st.markdown('**cotação x lucro:**', help="Se vazio é pq empresa não possiu dados o suficiente, provavelmente é nova")
+        else:
+            st.markdown('**Valor Patrimonial:**')
     with col4:
-        st.markdown('**Valor Teto por DY:**')
+        st.markdown('**Valor Teto por DY:**', help="Valor do DY estimado baseado no spread (média IPCA ou Selic, ultimos 5 anos, o que for maior) e no valor do ativo")
     with col5:
-        st.markdown('**Nota:**')
+        st.markdown('**Nota Atual Para Comprar:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
+
+def fmt_radar_fii(tipo, data, indice_base):
+    fmt_radar_head(tipo)
 
     for ticker in data[tipo]["tickers"]:
         fi = fii.FII(f"{ticker['ticker']}.SA")
@@ -63,38 +70,62 @@ def fmt_radar(tipo, data):
             nota = scoreFII.evaluate_fii(fi, indice_base)
             compare_status(nota, 6, f"{nota}")
 
+def fmt_radar_acoes(tipo, data, indice_base):
+    fmt_radar_head(tipo)
 
-def radar():
+    for ticker in data[tipo]["tickers"]:
+        ativo = acoes.acao(f"{ticker['ticker']}.SA")
 
-    with open('fii.yml', 'r') as file:
+
+        col1, col2, col3, col4, col5 = st.columns(5)
+
+        with col1:
+            st.info(ativo.ticker)
+        with col2:
+            st.info(f"R$ {ativo.cotacao}")
+        with col3:
+            compare_status(ativo.teto_cotacao_lucro, ativo.cotacao, f"R$ {ativo.teto_cotacao_lucro}")
+        with col4:
+            dy_estimado = (ativo.dy_estimado*ativo.cotacao)/(indice_base/100) if ativo.dy_estimado else 0
+            compare_status(dy_estimado, ativo.cotacao, f"R$ { dy_estimado:.2f}")
+        with col5:
+            nota = score.evaluate_company(ativo.acao, indice_base)
+            compare_status(nota, 5, f"{nota}")
+
+def radar(indice_base):
+
+    with open('ativos.yml', 'r') as file:
         data = yaml.safe_load(file)
 
     st.title("Radar de Ativos")
-    st.subheader("TIJOLO")
-    fmt_radar("tijolo", data)
 
-    st.markdown("---")
-
-    st.subheader("PAPEL")
-    fmt_radar("papel", data)
+    for tipo in ["tijolo", "papel", "fiagro"]:
+        st.subheader(tipo.upper())
+        fmt_radar_fii(tipo, data, indice_base)
 
     # add a separator
     st.markdown("---")
-
-    st.subheader("FIAGRO/Fi-Infra")
-    fmt_radar("fiagro", data)
-
-
-# Caixa de texto para escolher o ativo
-st.sidebar.title("Consulta de Ativos")
-chk_radio = st.sidebar.radio("Selecione o tipo de ativo", ["FII", "Ações"], index=0)
-ticker = st.sidebar.text_input('Digite o ticker do FII', help="Exemplo: HGLG11")
-
-if ticker:
-    if chk_radio == "FII":
-        fii_st.processar(ticker, indice_base)
-else:
-    st.sidebar.warning("Por favor, insira o ticker de um FII para obter as informações.")
-    radar()
+    st.subheader("Ações")
+    fmt_radar_acoes("acoes", data, indice_base)
+    # fmt_radar("acoes", data)
 
 
+def main():
+
+    indice_base = melhor_indice()
+
+    # Caixa de texto para escolher o ativo
+    st.sidebar.title("Consulta de Ativos")
+    chk_radio = st.sidebar.radio("Selecione o tipo de ativo", ["FII", "Ações"], index=0)
+    ticker = st.sidebar.text_input('Digite o ticker do FII', help="Exemplo: HGLG11")
+
+    if ticker:
+        if chk_radio == "FII":
+            fii_st.processar(ticker, indice_base)
+    else:
+        st.sidebar.warning("Por favor, insira o ticker de um FII para obter as informações.")
+        radar(indice_base)
+
+
+if __name__ == "__main__":
+    main()
