@@ -95,20 +95,25 @@ def fmt_radar_acoes(tipo, data, indice_base):
 
 def radar(indice_base):
 
+    # adicionar o selecionador para acoes ou fii
+    sl = st.selectbox("Selecione o tipo de ativo", ["", "FII", "Ações"])
+
     with open('ativos.yml', 'r') as file:
         data = yaml.safe_load(file)
 
     st.title("Radar de Ativos")
 
-    for tipo in ["shopping", "logistica", "papel", "hibrido", "fiagro", "infra"]:
-        st.subheader(tipo.upper())
-        fmt_radar_fii(tipo, data, indice_base)
+    if sl == "FII":
+        for tipo in ["shopping", "logistica", "papel", "hibrido", "fiagro", "infra"]:
+            st.subheader(tipo.upper())
+            fmt_radar_fii(tipo, data, indice_base)
 
-    # add a separator
-    st.markdown("---")
-    st.subheader("Ações")
-    fmt_radar_acoes("acoes", data, indice_base)
-    # fmt_radar("acoes", data)
+    if sl == "Ações":
+
+        st.markdown("---")
+        st.subheader("Ações")
+        fmt_radar_acoes("acoes", data, indice_base)
+        # fmt_radar("acoes", data)
 
 
 def main():

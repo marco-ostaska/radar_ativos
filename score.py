@@ -1,5 +1,4 @@
 # Definindo os dados da empresa
-import re
 import yfinance as yf
 
 
@@ -140,6 +139,13 @@ def score_risco_geral(data):
 
     return 0
 
+def score_free_float(data):
+    if 'floatShares' not in data.info or 'sharesOutstanding' not in data.info:
+        return 0
+    if data.info['floatShares'] / data.info['sharesOutstanding'] *100 > 30:
+        return 2
+    return 0
+
 
 
 def calculate_max_score():
@@ -158,6 +164,7 @@ def calculate_max_score():
     max_score_payOutRatio = 2  # Pontuação máxima para payOutRatio
     max_score_beta = 2  # Pontuação máxima para beta
     max_score_risco_geral = 2  # Pontuação máxima para risco_geral
+    max_score_free_float = 2  # Pontuação máxima para free_float
 
     max_score =  (
         max_score_trailingPE
@@ -175,8 +182,8 @@ def calculate_max_score():
         + max_score_payOutRatio
         + max_score_beta
         + max_score_risco_geral
+        + max_score_free_float
     )
-    print(max_score)
     return max_score
 
 
@@ -216,7 +223,7 @@ def processar(data):
 
 def main():
 
-    ativo = "VALE3.SA"
+    ativo = "CAML3.SA"
     data = yf.Ticker(ativo)
 
     print(evaluate_company(data))

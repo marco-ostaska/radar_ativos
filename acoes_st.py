@@ -97,6 +97,9 @@ def processar(ticker, indice_base):
         with col3:
             st.markdown('**Lucro:**')
             compare_status(ativo.lucro, indice_base/100, f"{ativo.lucro*100:.2f}%")
+        with col2:
+            st.markdown('**Free Float:**')
+            compare_status(ativo.free_float, 30, f"{ativo.free_float:.2f}%")
 
 
         # Linha de separação com cor customizada

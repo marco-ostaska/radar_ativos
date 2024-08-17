@@ -13,9 +13,47 @@ fiagro:
 infra:
   spread: 8
   tickers:
-    - ticker: "BDIF11"
-    - ticker: "IFRA11"
-    - ticker: "XPID11"
+    - ticker: "AFHI11"
+    - ticker: "AJFI11"
+    - ticker: "ARRI11"
+    - ticker: "AIEC11"
+    - ticker: "BLMG11"
+    - ticker: "BROF11"
+    - ticker: "BTCI11"
+    - ticker: "BTRA11"
+    - ticker: "CLIN11"
+    - ticker: "CYCR11"
+    - ticker: "GTWR11"
+    - ticker: "HGPO11"
+    - ticker: "HTMX11"
+    - ticker: "JSAF11"
+    - ticker: "KCRE11"
+    - ticker: "KISU11"
+    - ticker: "MCCI11"
+    - ticker: "MCHY11"
+    - ticker: "MFII11"
+    - ticker: "NCHB11"
+    - ticker: "PORD11"
+    - ticker: "RBRL11"
+    - ticker: "RBRX11"
+    - ticker: "RBRY11"
+    - ticker: "RBRP11"
+    - ticker: "RBFF11"
+    - ticker: "RBVA11"
+    - ticker: "SARE11"
+    - ticker: "SNFF11"
+    - ticker: "TEPP11"
+    - ticker: "TVRI11"
+    - ticker: "TORD11"
+    - ticker: "URPR11"
+    - ticker: "VGHF11"
+    - ticker: "VCJR11"
+    - ticker: "VSLH11"
+    - ticker: "VIUR11"
+    - ticker: "WHGR11"
+    - ticker: "XPCI11"
+    - ticker: "XPPR11"
+
 
 
 shopping:
@@ -28,13 +66,20 @@ shopping:
     - ticker: "VISC11"
     - ticker: "XPML11"
 
+
 logistica:
   spread: 3
   tickers:
+    - ticker: "ALZR11"
+    - ticker: "BRCO11"
+    - ticker: "BTLG11"
+    - ticker: "GGRC11"
     - ticker: "GARE11"
     - ticker: "HGLG11"
     - ticker: "HSLG11"
     - ticker: "PATL11"
+    - ticker: "TRXF11"
+    - ticker: "VILG11"
     - ticker: "XPIN11"
     - ticker: "XPLG11"
 
@@ -42,18 +87,49 @@ logistica:
 hibrido:
   spread: 4
   tickers:
+    - ticker: "BRCR11"
     - ticker: "HGRU11"
+    - ticker: "HGRE11"
+    - ticker: "JSRE11"
     - ticker: "KNRI11"
+    - ticker: "LGCP11"
+    - ticker: "PVBI11"
+    - ticker: "VINO11"
 
 papel:
   spread: 5
   tickers:
+    - ticker: "CACR11"
     - ticker: "BCRI11"
+    - ticker: "CPTS11"
+    - ticker: "DEVA11"
+    - ticker: "VRTA11"
+    - ticker: "HABT11"
+    - ticker: "HCTR11"
+    - ticker: "HGCR11"
     - ticker: "HSAF11"
-    - ticker: "KNCR11"
+    - ticker: "IRDM11"
+    - ticker: "KNHF11"
     - ticker: "KNHY11"
     - ticker: "KNIP11"
+    - ticker: "KNCR11"
     - ticker: "KNSC11"
+    - ticker: "MXRF11"
+    - ticker: "OUJP11"
+    - ticker: "PLCR11"
+    - ticker: "RBRR11"
+    - ticker: "RECR11"
+    - ticker: "RECT11"
+    - ticker: "RCRB11"
+    - ticker: "RZAK11"
+    - ticker: "RZTR11"
+    - ticker: "SNCI11"
+    - ticker: "TGAR11"
+    - ticker: "TRBL11"
+    - ticker: "VGIP11"
+    - ticker: "VGIR11"
+    - ticker: "CVBI11"
+
 
 acoes:
   spread: 0

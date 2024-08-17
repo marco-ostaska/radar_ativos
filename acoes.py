@@ -123,7 +123,12 @@ class acao:
     @property
     def risco_geral(self):
         return self.acao.info['overallRisk'] if 'overallRisk' in self.acao.info else 10
-
+    
+    @property
+    def free_float(self):
+        if 'floatShares' in self.acao.info and 'impliedSharesOutstanding' in self.acao.info:
+            return self.acao.info['floatShares'] / self.acao.info['impliedSharesOutstanding'] * 100
+        return 0
 
 
 
@@ -144,6 +149,7 @@ def main():
     print("Lucro:", ativo.lucro)
     print("DY estimado:", ativo.dy_estimado)
     print("Risco geral:", ativo.risco_geral)
+    print("Free float:", ativo.free_float)
 
 
 
