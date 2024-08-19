@@ -62,7 +62,7 @@ papel:
 acoes:
   spread: 0
   tickers:
-    - ticker: "ABEv3"
+    - ticker: "ABEV3"
     - ticker: "AGRO3"
     - ticker: "ALOS3"
     - ticker: "BBAS3"

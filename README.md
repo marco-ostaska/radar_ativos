@@ -1,8 +1,7 @@
 
 # Radar de Ativos - Streamlit App
 
-Este projeto é uma aplicação em Python que utiliza o Streamlit para exibir informações e análises sobre FIIs e ações. A aplicação obtém dados de diversas fontes, processa e exibe essas informações de forma interativa através de uma interface web. (Para estudo somente)
-
+Este projeto é uma aplicação em Python que utiliza o Streamlit para exibir informações e análises sobre FIIs e ações. A aplicação obtém dados de diversas fontes, processa e exibe essas informações de forma interativa através de uma interface web.
 
 
 ## Disclaimer
@@ -78,4 +77,3 @@ O uso deste aplicativo implica na aceitação dos termos deste disclaimer.
 - **acoes_st.py**: Implementa a lógica de processamento e exibição de informações detalhadas sobre ações.
 - **Dockerfile**: Configura a aplicação para ser executada dentro de um container Docker.
 
-## Contato
