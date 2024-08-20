@@ -97,9 +97,19 @@ def processar(ticker, indice_base):
         with col3:
             st.markdown('**Lucro:**')
             compare_status(ativo.lucro, indice_base/100, f"{ativo.lucro*100:.2f}%")
+        with col1:
+            st.markdown('**Earning Yield:**')
+            compare_status(ativo.earning_yield, indice_base, f"{ativo.earning_yield:.2f}%")
         with col2:
             st.markdown('**Free Float:**')
             compare_status(ativo.free_float, 30, f"{ativo.free_float:.2f}%")
+        with col3:
+            st.markdown('**P/L:**')
+            if ativo.pl != None:
+                compare_status(10,ativo.pl, f"{ativo.pl:.2f}")
+            else: 
+                st.error("N/A")
+        
 
 
         # Linha de separação com cor customizada

@@ -34,7 +34,7 @@ def compare_status(compare1, compare2, text):
 
 def fmt_radar_head(tipo):
 
-    col1, col2, col3, col4, col5 = st.columns(5)
+    col1, col2, col3, col4, col5,col6 = st.columns(6)
 
     with col1:
         st.markdown('**Ativo:**')
@@ -48,7 +48,11 @@ def fmt_radar_head(tipo):
     with col4:
         st.markdown('**Valor Teto por DY:**', help="Valor do DY estimado baseado no spread (média IPCA ou Selic, ultimos 5 anos, o que for maior) e no valor do ativo")
     with col5:
+        st.markdown('**Yield:**', help="Earning Yield para acoes e DY estimado para FII")
+    with col6:
         st.markdown('**Nota Atual Para Comprar:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
+        
+    
 
 def fmt_radar_fii(tipo, data, indice_base):
     fmt_radar_head(tipo)
@@ -57,10 +61,10 @@ def fmt_radar_fii(tipo, data, indice_base):
         fi = fii.FII(f"{ticker['ticker']}.SA")
 
 
-        col1, col2, col3, col4, col5 = st.columns(5)
+        col1, col2, col3, col4, col5, col6 = st.columns(6)
 
         with col1:
-            st.info(fi.ticker)
+            st.info(fi.ticker.split(".")[0])
         with col2:
             st.info(f"R$ {fi.cotacao}")
         with col3:
@@ -69,8 +73,14 @@ def fmt_radar_fii(tipo, data, indice_base):
             spread = data[tipo]["spread"] + indice_base
             compare_status(fi.dividendo_estimado/spread*100, fi.cotacao, f"R$ {fi.dividendo_estimado/spread*100:.2f}")
         with col5:
+            dy_estimado = (fi.dividendo_estimado*100)/fi.cotacao
+            spread = data[tipo]["spread"] + indice_base
+            compare_status(dy_estimado, spread, f"{dy_estimado:.2f}%")
+
+        with col6:
             nota = scoreFII.evaluate_fii(fi, indice_base)
             compare_status(nota, 6, f"{nota}")
+
 
 def fmt_radar_acoes(tipo, data, indice_base):
     fmt_radar_head(tipo)
@@ -79,10 +89,10 @@ def fmt_radar_acoes(tipo, data, indice_base):
         ativo = acoes.acao(f"{ticker['ticker']}.SA")
 
 
-        col1, col2, col3, col4, col5 = st.columns(5)
+        col1, col2, col3, col4, col5, col6 = st.columns(6)
 
         with col1:
-            st.info(ativo.ticker)
+            st.info(ativo.ticker.split(".")[0])
         with col2:
             st.info(f"R$ {ativo.cotacao}")
         with col3:
@@ -91,8 +101,12 @@ def fmt_radar_acoes(tipo, data, indice_base):
             dy_estimado = (ativo.dy_estimado*ativo.cotacao)/(indice_base/100) if ativo.dy_estimado else 0
             compare_status(dy_estimado, ativo.cotacao, f"R$ { dy_estimado:.2f}")
         with col5:
+            earning_yield = ativo.earning_yield
+            compare_status(earning_yield, indice_base, f"{earning_yield:.2f}%")
+        with col6:
             nota = score.evaluate_company(ativo.acao, indice_base)
             compare_status(nota, 5, f"{nota}")
+
 
 def radar(indice_base):
 

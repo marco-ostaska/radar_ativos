@@ -146,6 +146,14 @@ def score_free_float(data):
         return 2
     return 0
 
+def score_earning_yield(data, indice_base):
+    if 'trailingPE' not in data.info:
+        return 0
+    earning_yield = 1 / data.info['trailingPE']
+    if earning_yield > indice_base:
+        return 2    
+
+
 
 
 def calculate_max_score():
@@ -165,6 +173,7 @@ def calculate_max_score():
     max_score_beta = 2  # Pontuação máxima para beta
     max_score_risco_geral = 2  # Pontuação máxima para risco_geral
     max_score_free_float = 2  # Pontuação máxima para free_float
+    max_score_earning_yield = 2  # Pontuação máxima para earning_yield
 
     max_score =  (
         max_score_trailingPE
@@ -183,6 +192,7 @@ def calculate_max_score():
         + max_score_beta
         + max_score_risco_geral
         + max_score_free_float
+        + max_score_earning_yield
     )
     return max_score
 

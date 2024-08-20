@@ -73,6 +73,18 @@ class acao:
         if 'previousClose' in self.acao.info:
             return self.acao.info['previousClose']
         return self.adj_close.iloc[-1]
+    
+    @property
+    def earning_yield(self):
+        if 'trailingPE' in self.acao.info:
+            return (1/self.acao.info['trailingPE'])*100
+        return 0
+
+    @property
+    def pl(self):
+        if 'trailingPE' in self.acao.info:
+            return self.acao.info['trailingPE']
+        return None
 
 
     @property
