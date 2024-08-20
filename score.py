@@ -152,6 +152,7 @@ def score_earning_yield(data, indice_base):
     earning_yield = 1 / data.info['trailingPE']
     if earning_yield > indice_base:
         return 2    
+    return 0
 
 
 
