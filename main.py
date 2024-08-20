@@ -7,6 +7,7 @@ import scoreFII
 import acoes
 import acoes_st
 import score
+import base64
 
 @st.cache_data(ttl=86400)  # Cache por 24 horas (86400 segundos)
 def melhor_indice():
@@ -136,10 +137,23 @@ def main():
     # adicionar opt de upload para subistituir o ativos.yml
     st.sidebar.markdown("---")
     st.sidebar.title("Configurações")
+
+    if st.sidebar.button("Download ativos.yml", help="Baixa o arquivo ativos.yml"):
+        with open('ativos.yml', 'r') as file:
+            data = file.read()
+        b64 = base64.b64encode(data.encode()).decode()
+
+        href = f'<a href="data:file/yml;base64,{b64}" download="ativos.yml">Download ativos.yml</a>'
+        st.sidebar.markdown(href, unsafe_allow_html=True)
+
+    st.sidebar.markdown("---")
+
+
     if arquivo := st.sidebar.file_uploader("Upload ativos.yml", type="yml", help="Substitui o arquivo ativos.yml"):
         with open('ativos.yml', 'wb') as file:
             file.write(arquivo.getvalue())
         st.sidebar.success("Arquivo salvo com sucesso!")
+
 
 
 if __name__ == "__main__":
