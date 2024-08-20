@@ -123,7 +123,7 @@ class acao:
     @property
     def risco_geral(self):
         return self.acao.info['overallRisk'] if 'overallRisk' in self.acao.info else 10
-    
+
     @property
     def free_float(self):
         if 'floatShares' in self.acao.info and 'impliedSharesOutstanding' in self.acao.info:
@@ -138,18 +138,18 @@ class acao:
 def main():
     ativo = acao("VALE3.SA")
     print("Teto cotaçao x lucro:", ativo.teto_cotacao_lucro)
-    print("Cotacao:", ativo.cotacao)
-    print("Margem liquida:", ativo.margem_liquida)
-    print("Liquidez corrente:", ativo.liquidez_corrente)
-    print("Divida/EBITDA:", ativo.div_ebitda)
-    print("DY:", ativo.dy)
-    print("ROE:", ativo.roe)
-    print("Recomendacao:", ativo.recomendacao)
-    # print("Nota:", ativo.nota)
-    print("Lucro:", ativo.lucro)
-    print("DY estimado:", ativo.dy_estimado)
-    print("Risco geral:", ativo.risco_geral)
-    print("Free float:", ativo.free_float)
+    # print("Cotacao:", ativo.cotacao)
+    # print("Margem liquida:", ativo.margem_liquida)
+    # print("Liquidez corrente:", ativo.liquidez_corrente)
+    # print("Divida/EBITDA:", ativo.div_ebitda)
+    # print("DY:", ativo.dy)
+    # print("ROE:", ativo.roe)
+    # print("Recomendacao:", ativo.recomendacao)
+    # # print("Nota:", ativo.nota)
+    # print("Lucro:", ativo.lucro)
+    # print("DY estimado:", ativo.dy_estimado)
+    # print("Risco geral:", ativo.risco_geral)
+    # print("Free float:", ativo.free_float)
 
 
 

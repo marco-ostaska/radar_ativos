@@ -25,6 +25,7 @@ shopping:
     - ticker: "HGBS11"
     - ticker: "MALL11"
     - ticker: "MAXR11"
+    - ticker: "RBVA11"
     - ticker: "VISC11"
     - ticker: "XPML11"
 

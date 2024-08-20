@@ -123,9 +123,7 @@ def main():
     # Caixa de texto para escolher o ativo
     st.sidebar.title("Consulta de Ativos")
     chk_radio = st.sidebar.radio("Selecione o tipo de ativo", ["FII", "Ações"], index=0)
-    ticker = st.sidebar.text_input('Digite o ticker do FII', help="Exemplo: HGLG11")
-
-    if ticker:
+    if ticker := st.sidebar.text_input('Digite o ticker do FII', help="Exemplo: HGLG11"):
         if chk_radio == "FII":
             fii_st.processar(ticker, indice_base)
         if chk_radio == "Ações":
@@ -133,6 +131,15 @@ def main():
     else:
         st.sidebar.warning("Por favor, insira o ticker de um FII para obter as informações.")
         radar(indice_base)
+
+
+    # adicionar opt de upload para subistituir o ativos.yml
+    st.sidebar.markdown("---")
+    st.sidebar.title("Configurações")
+    if arquivo := st.sidebar.file_uploader("Upload ativos.yml", type="yml", help="Substitui o arquivo ativos.yml"):
+        with open('ativos.yml', 'wb') as file:
+            file.write(arquivo.getvalue())
+        st.sidebar.success("Arquivo salvo com sucesso!")
 
 
 if __name__ == "__main__":
