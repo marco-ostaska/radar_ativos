@@ -149,10 +149,10 @@ def score_free_float(data):
 def score_earning_yield(data, indice_base):
     if 'trailingPE' not in data.info:
         return 0
-    earning_yield = 1 / data.info['trailingPE']
+    earning_yield = (1 / data.info['trailingPE'])*100
     if earning_yield > indice_base:
         return 2    
-    return 0
+    return -2
 
 
 
