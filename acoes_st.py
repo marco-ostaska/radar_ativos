@@ -107,9 +107,9 @@ def processar(ticker, indice_base):
             st.markdown('**P/L:**')
             if ativo.pl != None:
                 compare_status(10,ativo.pl, f"{ativo.pl:.2f}")
-            else: 
+            else:
                 st.error("N/A")
-        
+
 
 
         # Linha de separação com cor customizada
@@ -138,42 +138,27 @@ def processar(ticker, indice_base):
 
         with col1:
             st.markdown('**Lucro X Cotação:**')
-            if ativo.teto_cotacao_lucro != None:
-                compare_status(ativo.teto_cotacao_lucro, ativo.cotacao, f"R$ {ativo.teto_cotacao_lucro:,.2f}")
-            else:
+            if ativo.teto_cotacao_lucro is None:
                 st.warning("Empresa com menos de 5 anos de B3")
+            else:
+                compare_status(ativo.teto_cotacao_lucro, ativo.cotacao, f"R$ {ativo.teto_cotacao_lucro:,.2f}")
         with col2:
             st.markdown('**Teto baseado em Dividendo Estimado**')
             dy_estimado = (ativo.dy_estimado*ativo.cotacao)/(indice_base/100) if ativo.dy_estimado else 0
             compare_status(dy_estimado, ativo.cotacao, f"R$ { dy_estimado:.2f}")
 
+        # Linha de separação com cor customizada
+        st.markdown("<hr style='background-color: #c4c4c4; height: 2px;'>", unsafe_allow_html=True)
+        st.subheader("Necessario para R$1000 de rendimentos mensais")
+        col1, col2 = st.columns(2)
+        cota_necessaria =   round(1000/((ativo.dy_estimado*ativo.cotacao)/12),0)
+        with col1:
+            st.markdown('**Cotas Necessarias:**')
+            st.info("{:,.0f}".format(cota_necessaria))
+        with col2:
+            st.markdown('**Investimento Necessario:**')
+            st.info(f"R$ {cota_necessaria*ativo.cotacao:,.2f}")
 
-        # with col1:
-        #     st.markdown('**Dividendos Estimados proximos 12m:**')
-        #     compare_status(ativo.acao.dividendo_estimado, ativo.acao.historico_dividendos['12 meses'], f"R$ {ativo.acao.dividendo_estimado:,.2f}")
-
-        # with col2:
-        #     st.markdown('**Dividendos Estimado por mes**')
-        #     compare_status(ativo.acao.dividendo_estimado/12, ativo.acao.historico_dividendos['12 meses']/12, f"R$ {ativo.acao.dividendo_estimado/12:,.2f}")
-
-        # st.markdown("<hr style='background-color: #c4c4c4; height: 2px;'>", unsafe_allow_html=True)
-
-        # st.text("Preço Teto baseado em dividendos")
-        # tijolo = indice_base + 3
-        # papel = indice_base + 5
-        # infra = indice_base + 8
-
-        # col1, col2, col3 = st.columns(3)
-
-        # with col1:
-        #     st.markdown('**Tijolo**')
-        #     compare_status(ativo.acao.dividendo_estimado/tijolo*100, ativo.acao.cotacao, f"R$ {ativo.acao.dividendo_estimado/tijolo*100:.2f}")
-        # with col2:
-        #     st.markdown('**Papel**')
-        #     compare_status(ativo.acao.dividendo_estimado/papel*100, ativo.acao.cotacao, f"R$ {ativo.acao.dividendo_estimado/papel*100:.2f}")
-        # with col3:
-        #     st.markdown('**Infra ou Agro**')
-        #     compare_status(ativo.acao.dividendo_estimado/infra*100, ativo.acao.cotacao, f"R$ {ativo.acao.dividendo_estimado/infra*100:.2f}")
 
     except Exception as e:
         st.error(f"Erro ao processar o ticker: {str(e)}")

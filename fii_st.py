@@ -137,6 +137,21 @@ def processar(ticker, indice_base):
             st.markdown('**Infra ou Agro**')
             compare_status(fi.dividendo_estimado/infra*100, fi.cotacao, f"R$ {fi.dividendo_estimado/infra*100:.2f}")
 
+
+        # Linha de separação com cor customizada
+        st.markdown("<hr style='background-color: #c4c4c4; height: 2px;'>", unsafe_allow_html=True)
+                # Guia de Compras: Preço Teto, Yield Projetado e Dividendos Esperados
+        st.subheader("Necessario para R$1000 de rendimentos mensais")
+        col1, col2 = st.columns(2)
+        cota_necessaria = round(1000/(fi.dividendo_estimado/12),0)
+        with col1:
+            st.markdown('**Cotas Necessarias:**')
+            st.info("{:,.0f}".format(cota_necessaria))
+        with col2:
+            st.markdown('**Investimento Necessario:**')
+            st.info(f"R$ {cota_necessaria*fi.cotacao:,.2f}")
+
+
     except Exception as e:
         st.error(f"Erro ao processar o ticker: {str(e)}")
 
