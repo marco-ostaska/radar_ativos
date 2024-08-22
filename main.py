@@ -1,29 +1,59 @@
-import fii
+import base64
+import json
 import streamlit as st
-import bancoCentral as bc
-import fii_st
 import yaml
-import scoreFII
 import acoes
 import acoes_st
+import bancoCentral as bc
+import fii
+import fii_st
 import score
-import base64
+import scoreFII
 
-@st.cache_data(ttl=86400)  # Cache por 24 horas (86400 segundos)
-def melhor_indice():
-    try: # Tenta obter o melhor índice
+def refresh_indices():
+    now = f"{datetime.datetime.now():%d-%m-%Y}"
+    try:
         selic = bc.SELIC(5)
         ipca = bc.IPCA(5)
-        if selic.media_ganho_real > ipca.media_ganho_real:
-            return selic.media_ganho_real
-        return ipca.media_ganho_real
+        data = {
+            'date': now,
+            'selic': selic.media_ganho_real,
+            'ipca': ipca.media_ganho_real
+        }
     except Exception as e:
-        st.error(f"Erro ao obter o índices do Banco Central: usando valor default de 7 {str(e)}")
-        return 7
+        data = {
+            'date': now,
+            'selic': 7,
+            'ipca': 6.5
+        }
+
+
+    with open('bc.json', 'w') as file:
+        json.dump(data, file)
+
+
+def get_indices():
+    # checa se arquivo bc.json existe
+    try:
+        with open('bc.json') as file:
+            data = json.load(file)
+            if data['date'].split('-')[1] == f"{datetime.datetime.now():%m}":
+                return data
+            refresh_indices()
+            return get_indices()
+    except FileNotFoundError:
+        refresh_indices()
+        return get_indices()
+
+def melhor_indice():
+    indices = get_indices()
+    selic = indices['selic']
+    ipca = indices['ipca']
+    return max(selic, ipca)
 
 
 def compare_status(compare1, compare2, text):
-    if compare1 == None or compare2 == None:
+    if compare1 is None or compare2 is None:
         return
     if compare1 > compare2:
         st.success(f"{text}")
@@ -51,8 +81,8 @@ def fmt_radar_head(tipo):
         st.markdown('**Yield:**', help="Earning Yield para acoes e DY estimado para FII")
     with col6:
         st.markdown('**Nota Atual Para Comprar:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
-        
-    
+
+
 
 def fmt_radar_fii(tipo, data, indice_base):
     fmt_radar_head(tipo)

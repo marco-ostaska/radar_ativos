@@ -49,6 +49,7 @@ hibrido:
   tickers:
     - ticker: "HGRU11"
     - ticker: "KNRI11"
+    - ticker: "TRXF11"
 
 papel:
   spread: 5

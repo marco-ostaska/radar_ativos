@@ -1,18 +1,50 @@
-import yfinance as yf
-import pprint
-import score
+import bancoCentral as bc
+import datetime
+import json
 
-ativo = yf.Ticker("PETR3.SA")
+def refresh_indices():
+    now = f"{datetime.datetime.now():%d-%m-%Y}"
+    try:
+        selic = bc.SELIC(5)
+        ipca = bc.IPCA(5)
+        data = {
+            'date': now,
+            'selic': selic.media_ganho_real,
+            'ipca': ipca.media_ganho_real
+        }
+    except Exception as e:
+        data = {
+            'date': now,
+            'selic': 7,
+            'ipca': 6.5
+        }
 
-pprint.pprint(ativo.info)
 
-# print(score.evaluate_company(ativo, 3))
-#'dividendRate': 7.52,
-# 'dividendYield': 0.1342,
-# liquidez corrent  'currentRatio': 1.079,
-# profitMargins margem liquida
-# payoutRatio = payout
-# crescimento do receitas revenueGrowth
-# crescimento de lucros profitGrowth ou earningsGrowth
-# divida liquida (DÍVIDA LÍQUIDA / EBITDA) conta= div_liq = (totalDebt - totalCash) / ebitda
-# Return on Equity (ROE) = returnOnEquity
+    with open('bc.json', 'w') as file:
+        json.dump(data, file)
+
+
+
+def get_indices():
+    # checa se arquivo bc.json existe
+    try:
+        with open('bc.json') as file:
+            data = json.load(file)
+            if data['date'].split('-')[1] == f"{datetime.datetime.now():%m}":
+                return data
+            refresh_indices()
+            return get_indices()
+    except FileNotFoundError:
+        refresh_indices()
+        return get_indices()
+
+
+
+def melhor_indice():
+    indices = get_indices()
+    selic = indices['selic']
+    ipca = indices['ipca']
+    return max(selic, ipca)
+
+
+print(melhor_indice())
