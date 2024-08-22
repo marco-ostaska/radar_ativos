@@ -32,9 +32,17 @@ def add_ativo(ticker, categoria):
     save_data(data)
     return True  # Retorna True se o ticker for adicionado com sucesso
 
+# Função para remover um ativo
+def remove_ativo(ticker, categoria):
+    data = load_data()
+    if categoria in data:
+        data[categoria]["tickers"] = [item for item in data[categoria]["tickers"] if item["ticker"] != ticker]
+        save_data(data)
+        return True  # Retorna True se o ticker for removido com sucesso
+    return False  # Retorna False se a categoria não existir ou o ticker não for encontrado
 
 def montar_add():
-   # Interface do Streamlit
+    # Interface do Streamlit
     st.title("Adicionar Ativos")
 
     # Formulário para entrada de dados
@@ -50,18 +58,41 @@ def montar_add():
         else:
             st.error(f"Ativo {ticker} já existe na categoria {categoria}.")
 
+    # Exibir a lista atualizada de ativos
+    st.header("Lista de Ativos")
+    data = load_data()
+    st.write(data)
 
+def montar_remove():
+    # Interface do Streamlit
+    st.title("Remover Ativos")
+
+    # Formulário para remoção de dados
+    with st.form(key="remove_ativo_form"):
+        ticker = st.text_input("Ticker")
+        categoria = st.selectbox("Categoria", ["infra", "shopping", "logistica", "acoes"])
+        submit_button = st.form_submit_button(label="Remover Ativo")
+
+    # Ação ao submeter o formulário
+    if submit_button:
+        if remove_ativo(ticker, categoria):
+            st.success(f"Ativo {ticker} removido da categoria {categoria}.")
+        else:
+            st.error(f"Ativo {ticker} não encontrado na categoria {categoria}.")
 
     # Exibir a lista atualizada de ativos
     st.header("Lista de Ativos")
     data = load_data()
     st.write(data)
 
-
 def main():
-    montar_add()
+    st.sidebar.title("Menu")
+    option = st.sidebar.selectbox("Escolha uma opção", ["Adicionar Ativo", "Remover Ativo"])
 
-
+    if option == "Adicionar Ativo":
+        montar_add()
+    elif option == "Remover Ativo":
+        montar_remove()
 
 if __name__ == "__main__":
     main()

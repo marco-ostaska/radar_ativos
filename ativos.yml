@@ -1,101 +1,90 @@
-fiagro:
-  spread: 8
-  tickers:
-    - ticker: "BTRA11"
-    - ticker: "BTAL11"
-    - ticker: "FGAA11"
-    - ticker: "KNCA11"
-    - ticker: "RURA11"
-    - ticker: "RZAG11"
-    - ticker: "VGIA11"
-    - ticker: "XPCA11"
-
-infra:
-  spread: 8
-  tickers:
-    - ticker: "BDIF11"
-    - ticker: "IFRA11"
-    - ticker: "XPID11"
-
-
-shopping:
-  spread: 3
-  tickers:
-    - ticker: "HSML11"
-    - ticker: "HGBS11"
-    - ticker: "MALL11"
-    - ticker: "MAXR11"
-    - ticker: "RBVA11"
-    - ticker: "VISC11"
-    - ticker: "XPML11"
-
-logistica:
-  spread: 3
-  tickers:
-    - ticker: "BTLG11"
-    - ticker: "GARE11"
-    - ticker: "GGRC11"
-    - ticker: "HGLG11"
-    - ticker: "HSLG11"
-    - ticker: "PATL11"
-    - ticker: "XPIN11"
-    - ticker: "XPLG11"
-
-
-
-
-hibrido:
-  spread: 4
-  tickers:
-    - ticker: "HGRU11"
-    - ticker: "KNRI11"
-    - ticker: "TRXF11"
-
-papel:
-  spread: 5
-  tickers:
-    - ticker: "BCRI11"
-    - ticker: "HSAF11"
-    - ticker: "KNCR11"
-    - ticker: "KNHY11"
-    - ticker: "KNIP11"
-    - ticker: "KNSC11"
-
 acoes:
   spread: 0
   tickers:
-    - ticker: "ABEV3"
-    - ticker: "AGRO3"
-    - ticker: "ALOS3"
-    - ticker: "BBAS3"
-    - ticker: "BBDC4"
-    - ticker: "BBSE3"
-    - ticker: "CAML3"
-    - ticker: "CMIG4"
-    - ticker: "CPFE3"
-    - ticker: "CSMG3"
-    - ticker: "CXSE3"
-    - ticker: "EGIE3"
-    - ticker: "EKTR3"
-    - ticker: "EQTL3"
-    - ticker: "FLRY3"
-    - ticker: "GGBR4"
-    - ticker: "GOAU3"
-    - ticker: "ITUB3"
-    - ticker: "JALL3"
-    - ticker: "KEPL3"
-    - ticker: "MGLU3"
-    - ticker: "NEOE3"
-    - ticker: "PSSA3"
-    - ticker: "PRIO3"
-    - ticker: "POMO3"
-    - ticker: "POSI3"
-    - ticker: "RANI3"
-    - ticker: "RENT3"
-    - ticker: "SAPR3"
-    - ticker: "SLCE3"
-    - ticker: "TOTS3"
-    - ticker: "VALE3"
-    - ticker: "VIVA3"
-
-
+  - ticker: ABEV3
+  - ticker: AGRO3
+  - ticker: ALOS3
+  - ticker: BBAS3
+  - ticker: BBDC4
+  - ticker: BBSE3
+  - ticker: CAML3
+  - ticker: CMIG4
+  - ticker: CPFE3
+  - ticker: CSMG3
+  - ticker: CXSE3
+  - ticker: EGIE3
+  - ticker: EKTR3
+  - ticker: EQTL3
+  - ticker: FLRY3
+  - ticker: GGBR4
+  - ticker: GOAU3
+  - ticker: ITUB3
+  - ticker: JALL3
+  - ticker: KEPL3
+  - ticker: MGLU3
+  - ticker: NEOE3
+  - ticker: POMO3
+  - ticker: POSI3
+  - ticker: PRIO3
+  - ticker: PSSA3
+  - ticker: RANI3
+  - ticker: RENT3
+  - ticker: SAPR3
+  - ticker: SLCE3
+  - ticker: TOTS3
+  - ticker: VALE3
+  - ticker: VIVA3
+fiagro:
+  spread: 8
+  tickers:
+  - ticker: BTRA11
+  - ticker: BTAL11
+  - ticker: FGAA11
+  - ticker: KNCA11
+  - ticker: RURA11
+  - ticker: RZAG11
+  - ticker: VGIA11
+  - ticker: XPCA11
+hibrido:
+  spread: 4
+  tickers:
+  - ticker: HGRU11
+  - ticker: KNRI11
+  - ticker: TRXF11
+infra:
+  spread: 8
+  tickers:
+  - ticker: BDIF11
+  - ticker: HSML11
+  - ticker: IFRA11
+  - ticker: XPID11
+logistica:
+  spread: 3
+  tickers:
+  - ticker: BTLG11
+  - ticker: GARE11
+  - ticker: GGRC11
+  - ticker: HGLG11
+  - ticker: HSLG11
+  - ticker: PATL11
+  - ticker: XPIN11
+  - ticker: XPLG11
+papel:
+  spread: 5
+  tickers:
+  - ticker: BCRI11
+  - ticker: HSAF11
+  - ticker: KNCR11
+  - ticker: KNHY11
+  - ticker: KNIP11
+  - ticker: KNSC11
+shopping:
+  spread: 3
+  tickers:
+  - ticker: HGBS11
+  - ticker: HSML11
+  - ticker: MALL11
+  - ticker: MAXR11
+  - ticker: RBVA11
+  - ticker: VISC11
+  - ticker: XPML11

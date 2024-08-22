@@ -10,6 +10,7 @@ import fii
 import fii_st
 import score
 import scoreFII
+from ativosYAML import montar_add, montar_remove
 
 def refresh_indices():
     now = f"{datetime.datetime.now():%d-%m-%Y}"
@@ -81,7 +82,7 @@ def fmt_radar_head(tipo):
     with col5:
         st.markdown('**Yield:**', help="Earning Yield para acoes e DY estimado para FII")
     with col6:
-        st.markdown('**Nota Atual Para Comprar:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
+        st.markdown('**Nota Atual:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
 
 
 
@@ -183,25 +184,12 @@ def main():
     st.sidebar.markdown("---")
     st.sidebar.title("Configurações")
 
-    # adicionar ativos em FII
-    st.sidebar.subheader("Adicionar ativos em FII")
+    cfg = st.sidebar.selectbox("Selecione a opção", ["", "Adicionar Ativos", "Remover Ativos"], index=0)
+    if cfg == "Adicionar Ativos":
+        montar_add()
+    elif cfg == "Remover Ativos":
+        montar_remove()
 
-
-    if st.sidebar.button("Download ativos.yml", help="Baixa o arquivo ativos.yml"):
-        with open('ativos.yml', 'r') as file:
-            data = file.read()
-        b64 = base64.b64encode(data.encode()).decode()
-
-        href = f'<a href="data:file/yml;base64,{b64}" download="ativos.yml">Download ativos.yml</a>'
-        st.sidebar.markdown(href, unsafe_allow_html=True)
-
-    st.sidebar.markdown("---")
-
-
-    if arquivo := st.sidebar.file_uploader("Upload ativos.yml", type="yml", help="Substitui o arquivo ativos.yml"):
-        with open('ativos.yml', 'wb') as file:
-            file.write(arquivo.getvalue())
-        st.sidebar.success("Arquivo salvo com sucesso!")
 
 
 
