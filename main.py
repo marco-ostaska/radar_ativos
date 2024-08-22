@@ -1,5 +1,6 @@
 import base64
 import json
+import datetime
 import streamlit as st
 import yaml
 import acoes
@@ -181,6 +182,10 @@ def main():
     # adicionar opt de upload para subistituir o ativos.yml
     st.sidebar.markdown("---")
     st.sidebar.title("Configurações")
+
+    # adicionar ativos em FII
+    st.sidebar.subheader("Adicionar ativos em FII")
+
 
     if st.sidebar.button("Download ativos.yml", help="Baixa o arquivo ativos.yml"):
         with open('ativos.yml', 'r') as file:
