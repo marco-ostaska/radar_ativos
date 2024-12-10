@@ -1,6 +1,7 @@
 import yfinance as yf
 import investidor10
 from datetime import datetime
+import numpy as np
 
 
 #criar objeto FII que ler o ticker
@@ -24,12 +25,15 @@ class FII:
     def cotas_emitidas(self):
         if 'Ordinary Shares Number' not in self.fii.balance_sheet.index:
             return None
+        if np.isnan(self.fii.balance_sheet.loc['Ordinary Shares Number'].head(1).values[0]):
+            return None
         return self.fii.balance_sheet.loc['Ordinary Shares Number'].head(1).values[0]
 
 
     @property
     def vpa(self):
         if self.valor_patrimonial is None or self.cotas_emitidas is None:
+
             i10 = get_investidor10(self.ticker)
             return round(self.cotacao/i10.pvp,2)
         return round(self.valor_patrimonial / self.cotas_emitidas,2)
@@ -83,7 +87,7 @@ def get_investidor10(ticker):
     return investidor10.FI_INFRA(ticker)
 
 def main():
-    fii = FII('MAXR11.SA')
+    fii = FII('HSML11.SA')
 
     print(f"Ticker: {fii.ticker}")
     print(f"Valor Patrimonial: {fii.valor_patrimonial}")
@@ -96,7 +100,7 @@ def main():
 
     print(f"Dividendo estimado: {fii.dividendo_estimado}")
 
-    print(f"Histórico de dividendos: {fii.historico_dividendos}")
+   # print(f"Histórico de dividendos: {fii.historico_dividendos}")
     print(f"Dividendos: {fii.dividends}")
 
 

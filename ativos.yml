@@ -23,6 +23,7 @@ acoes:
   - ticker: KEPL3
   - ticker: MGLU3
   - ticker: NEOE3
+  - ticker: PETR3
   - ticker: POMO3
   - ticker: POSI3
   - ticker: PRIO3
@@ -50,6 +51,7 @@ hibrido:
   tickers:
   - ticker: HGRU11
   - ticker: KNRI11
+  - ticker: MAXR11
   - ticker: TRXF11
 infra:
   spread: 8
@@ -84,7 +86,6 @@ shopping:
   - ticker: HGBS11
   - ticker: HSML11
   - ticker: MALL11
-  - ticker: MAXR11
   - ticker: RBVA11
   - ticker: VISC11
   - ticker: XPML11
