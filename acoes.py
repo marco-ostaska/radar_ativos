@@ -22,7 +22,7 @@ class acao:
         try:
             dates = list(self.acao.income_stmt.loc['Net Income'].dropna().tail(5).index.year)
             lucro = list(self.acao.income_stmt.loc['Net Income'].dropna().tail(5).values)
-            cotacoes = [round(self.media_ponderada_fechamento(d), 2) for d in dates]
+            cotacoes = [round(float(self.media_ponderada_fechamento(d)[0]), 2) for d in dates]
             # invertendo a ordem das listas
             dates = dates[::-1]
             lucro = lucro[::-1]
@@ -61,7 +61,8 @@ class acao:
 
             # Calcular o valor normalizada do ultimo lucro na escala de cotaçao
             return normalizado
-        except:
+        except Exception as e:
+            print(f"Erro: {e}")
             return None
 
 
@@ -73,7 +74,7 @@ class acao:
         if 'previousClose' in self.acao.info:
             return self.acao.info['previousClose']
         return self.adj_close.iloc[-1]
-    
+
     @property
     def earning_yield(self):
         if 'trailingPE' in self.acao.info:
