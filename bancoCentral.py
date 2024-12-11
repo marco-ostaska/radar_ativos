@@ -69,6 +69,9 @@ class IPCA(Indices):
     def media_ganho_real(self):
         return self.media_anual + 2
 
+
+
+
 def taxa_livre_risco(anos_hist):
     selic = SELIC(anos_hist)
     ipca = IPCA(anos_hist)
@@ -77,6 +80,8 @@ def taxa_livre_risco(anos_hist):
         return ipca.media_ganho_real()
 
     return selic.media_anual()
+
+
 
 def main():
     selic = SELIC(1)
