@@ -1,4 +1,4 @@
-import base64
+import os
 import json
 import datetime
 import streamlit as st
@@ -40,28 +40,32 @@ def refresh_indices():
             'ipca_media5': ipca.media_anual,
             'ipca_atual': ipc_a.media_anual
         }
+
+        with open('bc.json', 'w') as file:
+            json.dump(data, file)
     except Exception as e:
         print(e)
         data = {
             'date': now,
-            'selic': 7,
-            'ipca': 6.5,
-            'selic_atual': 12,
-            'ipca_media5': 6.5,
-            'ipca_atual': 6
+            'selic': 0,
+            'ipca': 0,
+            'selic_atual': 0,
+            'ipca_media5': 0,
+            'ipca_atual': 0
         }
+    # checa se bc.json existe
+
+    if not os.path.exists('bc.json'):
+        with open('bc.json', 'w') as file:
+            json.dump(data, file)
 
 
-    with open('bc.json', 'w') as file:
-        json.dump(data, file)
-
-
-def get_indices():
+def get_indices(force=False):
     # checa se arquivo bc.json existe
     try:
         with open('bc.json') as file:
             data = json.load(file)
-            if data['date'].split('-')[1] == f"{datetime.datetime.now():%m}":
+            if data['date'].split('-')[1] == f"{datetime.datetime.now():%m}" and not force:
                 return data
             refresh_indices()
             return get_indices()
@@ -217,7 +221,13 @@ def fmt_radar_indice(indices):
 
 
 def radar(indice_base):
+
     indices = get_indices()
+    # Botão para forçar o refresh
+    if st.button("Atualizar Indices"):
+        with st.spinner("Atualizando dados..."):
+            indices = get_indices(force=True)
+        st.success("Dados atualizados com sucesso!")
     fmt_radar_indice(indices)
 
     # adicionar o selecionador para acoes ou fii
