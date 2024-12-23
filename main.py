@@ -106,7 +106,8 @@ def fmt_radar_head(tipo):
     with col4:
         st.markdown('**Valor Teto por DY:**', help="Valor do DY estimado baseado no spread (média IPCA ou Selic, ultimos 5 anos, o que for maior) e no valor do ativo")
     with col5:
-        st.markdown('**Yield:**', help="Earning Yield para acoes e DY estimado para FII")
+        #st.markdown('**Yield:**', help="Earning Yield para acoes e DY estimado para FII")
+        st.markdown('**Yield:**')
     with col6:
         st.markdown('**Rendimento Real:**', help="Rendimento real do ativo baseado no indice de referencia")
     with col7:
@@ -159,7 +160,7 @@ def fmt_radar_acoes(tipo, data, indice_base, indices):
         ativo = acoes.acao(f"{ticker['ticker']}.SA")
 
 
-        col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
+        col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
 
         with col1:
             st.info(ativo.ticker.split(".")[0])
@@ -171,15 +172,23 @@ def fmt_radar_acoes(tipo, data, indice_base, indices):
             dy_estimado = (ativo.dy_estimado*ativo.cotacao)/(indice_base/100) if ativo.dy_estimado else 0
             compare_status(dy_estimado, ativo.cotacao, f"R$ { dy_estimado:.2f}")
         with col5:
-            earning_yield = ativo.earning_yield
-            compare_status(earning_yield, indice_base, f"{earning_yield:.2f}%")
+            #earning_yield = ativo.earning_yield
+            dy_estimado = (ativo.dy_estimado)*100 if ativo.dy_estimado else 0
+            compare_status(dy_estimado, indice_base, f"{dy_estimado:.2f}%")
         with col6:
-            earning_yield = ativo.earning_yield
+            # earning_yield = ativo.earning_yield
             rf_real = (indices['selic_atual'] - (indices['selic_atual'] * 0.15)) - indices['ipca_atual']
             maior = max(indices['ipca_atual'], rf_real)
-            real = earning_yield - indices['ipca_atual']
+            dy_estimado = (ativo.dy_estimado)*100 if ativo.dy_estimado else 0
+            real = dy_estimado - indices['ipca_atual']
             compare_status(real, maior, f"{real:.2f}%")
+
         with col7:
+            dy_estimado = (ativo.dy_estimado*ativo.cotacao)/(indice_base/100) if ativo.dy_estimado else 0
+            base = ativo.teto_cotacao_lucro if ativo.teto_cotacao_lucro else dy_estimado
+            potencial = round((((base-ativo.cotacao)/ativo.cotacao)*100),2)
+            compare_status(potencial,0, f"{potencial}%")
+        with col8:
             nota = score.evaluate_company(ativo.acao, indice_base)
             compare_status(nota, 5, f"{nota}")
 
