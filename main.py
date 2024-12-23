@@ -18,7 +18,7 @@ st.markdown(
     """
     <style>
     .main {
-        max-width: 65%; /* Ajuste o valor aqui para controlar a largura */
+        max-width: 70%; /* Ajuste o valor aqui para controlar a largura */
         margin: 0 auto; /* Centraliza o conteúdo */
     }
     </style>
@@ -92,7 +92,7 @@ def compare_status(compare1, compare2, text):
 
 def fmt_radar_head(tipo):
 
-    col1, col2, col3, col4, col5,col6, col7 = st.columns(7)
+    col1, col2, col3, col4, col5,col6, col7, col8 = st.columns(8)
 
     with col1:
         st.markdown('**Ativo:**')
@@ -110,6 +110,8 @@ def fmt_radar_head(tipo):
     with col6:
         st.markdown('**Rendimento Real:**', help="Rendimento real do ativo baseado no indice de referencia")
     with col7:
+        st.markdown('**Potencial:**')
+    with col8:
         st.markdown('**Nota Atual:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
 
 
@@ -120,8 +122,12 @@ def fmt_radar_fii(tipo, data, indice_base, indices):
     for ticker in data[tipo]["tickers"]:
         fi = fii.FII(f"{ticker['ticker']}.SA")
 
+        spread = data[tipo]["spread"] + indice_base
+        dy_estimado = (fi.dividendo_estimado*100)/fi.cotacao
+        teto_div = fi.dividendo_estimado/spread*100
 
-        col1, col2, col3, col4, col5,col6, col7 = st.columns(7)
+
+        col1, col2, col3, col4, col5,col6, col7, col8 = st.columns(8)
 
         with col1:
             st.info(fi.ticker.split(".")[0])
@@ -130,19 +136,18 @@ def fmt_radar_fii(tipo, data, indice_base, indices):
         with col3:
             compare_status(fi.vpa, fi.cotacao, f"R$ {fi.vpa}")
         with col4:
-            spread = data[tipo]["spread"] + indice_base
-            compare_status(fi.dividendo_estimado/spread*100, fi.cotacao, f"R$ {fi.dividendo_estimado/spread*100:.2f}")
+            compare_status(teto_div,fi.cotacao,  f"R$ {fi.dividendo_estimado/spread*100:.2f}")
         with col5:
-            dy_estimado = (fi.dividendo_estimado*100)/fi.cotacao
-            spread = data[tipo]["spread"] + indice_base
             compare_status(dy_estimado, spread, f"{dy_estimado:.2f}%")
         with col6:
-            dy_estimado = (fi.dividendo_estimado*100)/fi.cotacao
             rf_real = (indices['selic_atual'] - (indices['selic_atual'] * 0.15)) - indices['ipca_atual']
             maior = max(indices['ipca_atual'], rf_real)
             real = dy_estimado - indices['ipca_atual']
             compare_status(real, maior, f"{real:.2f}%")
         with col7:
+            pot = round(((teto_div-fi.cotacao)/fi.cotacao)*100,2)
+            compare_status(pot, 0, f"{pot}%")
+        with col8:
             nota = scoreFII.evaluate_fii(fi, indice_base)
             compare_status(nota, 6, f"{nota}")
 
