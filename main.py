@@ -14,17 +14,17 @@ from ativosYAML import montar_add, montar_remove
 
 st.set_page_config(layout="wide")
 
-st.markdown(
-    """
-    <style>
-    .main {
-        max-width: 70%; /* Ajuste o valor aqui para controlar a largura */
-        margin: 0 auto; /* Centraliza o conteúdo */
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+# st.markdown(
+#     """
+#     <style>
+#     .main {
+#         max-width: 75%; /* Ajuste o valor aqui para controlar a largura */
+#         margin: 0 auto; /* Centraliza o conteúdo */
+#     }
+#     </style>
+#     """,
+#     unsafe_allow_html=True,
+# )
 
 def refresh_indices():
     now = f"{datetime.datetime.now():%d-%m-%Y}"
@@ -92,28 +92,38 @@ def compare_status(compare1, compare2, text):
 
 def fmt_radar_head(tipo):
 
-    col1, col2, col3, col4, col5,col6, col7, col8 = st.columns(8)
+    print("tipo,", tipo)
 
-    with col1:
+    col = st.columns(9) if tipo=="acoes" else st.columns(8)
+
+
+    with col[0]:
         st.markdown('**Ativo:**')
-    with col2:
+    with col[1]:
         st.markdown('**Cotação:**')
-    with col3:
+    with col[2]:
         if tipo == "acoes":
             st.markdown('**cotação x lucro:**', help="Se vazio é pq empresa não possiu dados o suficiente, provavelmente é nova")
         else:
             st.markdown('**Valor Patrimonial:**')
-    with col4:
+    with col[3]:
         st.markdown('**Valor Teto por DY:**', help="Valor do DY estimado baseado no spread (média IPCA ou Selic, ultimos 5 anos, o que for maior) e no valor do ativo")
-    with col5:
+    with col[4]:
         #st.markdown('**Yield:**', help="Earning Yield para acoes e DY estimado para FII")
-        st.markdown('**Yield:**')
-    with col6:
+        st.markdown('**DY:**')
+    with col[5]:
         st.markdown('**Rendimento Real:**', help="Rendimento real do ativo baseado no indice de referencia")
-    with col7:
+    with col[6]:
         st.markdown('**Potencial:**')
-    with col8:
-        st.markdown('**Nota Atual:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
+    with col[7]:
+        if tipo == "acoes":
+            st.markdown('**Earning Yield:**')
+        else:
+            st.markdown('**Nota Atual:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
+    if tipo == "acoes":
+        with col[8]:
+            st.markdown('**Nota Atual:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
+
 
 
 
@@ -127,28 +137,27 @@ def fmt_radar_fii(tipo, data, indice_base, indices):
         dy_estimado = (fi.dividendo_estimado*100)/fi.cotacao
         teto_div = fi.dividendo_estimado/spread*100
 
+        col = st.columns(8)
 
-        col1, col2, col3, col4, col5,col6, col7, col8 = st.columns(8)
-
-        with col1:
+        with col[0]:
             st.info(fi.ticker.split(".")[0])
-        with col2:
+        with col[1]:
             st.info(f"R$ {fi.cotacao}")
-        with col3:
+        with col[2]:
             compare_status(fi.vpa, fi.cotacao, f"R$ {fi.vpa}")
-        with col4:
+        with col[3]:
             compare_status(teto_div,fi.cotacao,  f"R$ {fi.dividendo_estimado/spread*100:.2f}")
-        with col5:
+        with col[4]:
             compare_status(dy_estimado, spread, f"{dy_estimado:.2f}%")
-        with col6:
+        with col[5]:
             rf_real = (indices['selic_atual'] - (indices['selic_atual'] * 0.15)) - indices['ipca_atual']
             maior = max(indices['ipca_atual'], rf_real)
             real = dy_estimado - indices['ipca_atual']
             compare_status(real, maior, f"{real:.2f}%")
-        with col7:
+        with col[6]:
             pot = round(((teto_div-fi.cotacao)/fi.cotacao)*100,2)
             compare_status(pot, 0, f"{pot}%")
-        with col8:
+        with col[7]:
             nota = scoreFII.evaluate_fii(fi, indice_base)
             compare_status(nota, 6, f"{nota}")
 
@@ -160,35 +169,37 @@ def fmt_radar_acoes(tipo, data, indice_base, indices):
         ativo = acoes.acao(f"{ticker['ticker']}.SA")
 
 
-        col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
+        col = st.columns(9)
 
-        with col1:
+        with col[0]:
             st.info(ativo.ticker.split(".")[0])
-        with col2:
+        with col[1]:
             st.info(f"R$ {ativo.cotacao}")
-        with col3:
+        with col[2]:
             compare_status(ativo.teto_cotacao_lucro, ativo.cotacao, f"R$ {ativo.teto_cotacao_lucro}")
-        with col4:
+        with col[3]:
             dy_estimado = (ativo.dy_estimado*ativo.cotacao)/(indice_base/100) if ativo.dy_estimado else 0
             compare_status(dy_estimado, ativo.cotacao, f"R$ { dy_estimado:.2f}")
-        with col5:
+        with col[4]:
             #earning_yield = ativo.earning_yield
             dy_estimado = (ativo.dy_estimado)*100 if ativo.dy_estimado else 0
             compare_status(dy_estimado, indice_base, f"{dy_estimado:.2f}%")
-        with col6:
+        with col[5]:
             # earning_yield = ativo.earning_yield
             rf_real = (indices['selic_atual'] - (indices['selic_atual'] * 0.15)) - indices['ipca_atual']
             maior = max(indices['ipca_atual'], rf_real)
             dy_estimado = (ativo.dy_estimado)*100 if ativo.dy_estimado else 0
             real = dy_estimado - indices['ipca_atual']
             compare_status(real, maior, f"{real:.2f}%")
-
-        with col7:
+        with col[6]:
             dy_estimado = (ativo.dy_estimado*ativo.cotacao)/(indice_base/100) if ativo.dy_estimado else 0
             base = ativo.teto_cotacao_lucro if ativo.teto_cotacao_lucro else dy_estimado
             potencial = round((((base-ativo.cotacao)/ativo.cotacao)*100),2)
             compare_status(potencial,0, f"{potencial}%")
-        with col8:
+        with col[7]:
+            earning_yield = ativo.earning_yield
+            compare_status(earning_yield, indice_base, f"{earning_yield:.2f}%")
+        with col[8]:
             nota = score.evaluate_company(ativo.acao, indice_base)
             compare_status(nota, 5, f"{nota}")
 
@@ -247,6 +258,7 @@ def radar(indice_base):
     # adicionar o selecionador para acoes ou fii
     sl = st.selectbox("Selecione o tipo de ativo", ["", "FII", "Ações"])
 
+
     with open('ativos.yml', 'r') as file:
         data = yaml.safe_load(file)
 
@@ -258,7 +270,6 @@ def radar(indice_base):
             fmt_radar_fii(tipo, data, indice_base, indices)
 
     if sl == "Ações":
-
         st.markdown("---")
         st.subheader("Ações")
         fmt_radar_acoes("acoes", data, indice_base, indices)

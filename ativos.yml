@@ -15,26 +15,34 @@ acoes:
   - ticker: EGIE3
   - ticker: EKTR3
   - ticker: EQTL3
+  - ticker: EUCA3
   - ticker: FLRY3
   - ticker: GGBR4
   - ticker: GOAU3
+  - ticker: INTB3
+  - ticker: ITSA4
   - ticker: ITUB3
   - ticker: JALL3
   - ticker: KEPL3
-  - ticker: MGLU3
+  - ticker: KLBN11
+  - ticker: LEVE3
   - ticker: NEOE3
   - ticker: PETR3
   - ticker: POMO3
   - ticker: POSI3
   - ticker: PRIO3
   - ticker: PSSA3
+  - ticker: RADL3
   - ticker: RANI3
+  - ticker: RAPT3
   - ticker: RENT3
   - ticker: SAPR3
   - ticker: SLCE3
+  - ticker: SUZB3
   - ticker: TOTS3
   - ticker: VALE3
   - ticker: VIVA3
+  - ticker: WEGE3
 fiagro:
   spread: 8
   tickers:
