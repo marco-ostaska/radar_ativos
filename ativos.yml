@@ -4,27 +4,29 @@ acoes:
   - ticker: ABEV3
   - ticker: AGRO3
   - ticker: ALOS3
+  - ticker: B3SA3
   - ticker: BBAS3
   - ticker: BBDC4
   - ticker: BBSE3
   - ticker: CAML3
+  - ticker: CCRO3
   - ticker: CMIG4
   - ticker: CPFE3
   - ticker: CSMG3
   - ticker: CXSE3
+  - ticker: ECOR3
   - ticker: EGIE3
   - ticker: EKTR3
   - ticker: EQTL3
-  - ticker: EUCA3
   - ticker: FLRY3
   - ticker: GGBR4
-  - ticker: GOAU3
+  - ticker: HAPV3
   - ticker: INTB3
   - ticker: ITSA4
   - ticker: ITUB3
   - ticker: JALL3
+  - ticker: JBSS3
   - ticker: KEPL3
-  - ticker: KLBN11
   - ticker: LEVE3
   - ticker: NEOE3
   - ticker: PETR3
@@ -37,7 +39,8 @@ acoes:
   - ticker: RAPT3
   - ticker: RENT3
   - ticker: SAPR3
-  - ticker: SLCE3
+  - ticker: SBSP3
+  - ticker: STBP3
   - ticker: SUZB3
   - ticker: TOTS3
   - ticker: VALE3
@@ -57,6 +60,7 @@ fiagro:
 hibrido:
   spread: 4
   tickers:
+  - ticker: GARE11
   - ticker: HGRU11
   - ticker: KNRI11
   - ticker: MAXR11
@@ -71,7 +75,6 @@ logistica:
   spread: 3
   tickers:
   - ticker: BTLG11
-  - ticker: GARE11
   - ticker: GGRC11
   - ticker: HGLG11
   - ticker: HSLG11

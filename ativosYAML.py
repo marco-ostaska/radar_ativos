@@ -48,7 +48,7 @@ def montar_add():
     # Formulário para entrada de dados
     with st.form(key="add_ativo_form"):
         ticker = st.text_input("Ticker")
-        categoria = st.selectbox("Categoria", ["infra", "shopping", "logistica", "acoes"])
+        categoria = st.selectbox("Categoria", ["agro", "infra", "shopping", "logistica", "acoes", "hibrido"])
         submit_button = st.form_submit_button(label="Adicionar Ativo")
 
     # Ação ao submeter o formulário
@@ -70,7 +70,7 @@ def montar_remove():
     # Formulário para remoção de dados
     with st.form(key="remove_ativo_form"):
         ticker = st.text_input("Ticker")
-        categoria = st.selectbox("Categoria", ["infra", "shopping", "logistica", "acoes"])
+        categoria = st.selectbox("Categoria", ["agro", "infra", "shopping", "logistica", "acoes", "hibrido"])
         submit_button = st.form_submit_button(label="Remover Ativo")
 
     # Ação ao submeter o formulário
