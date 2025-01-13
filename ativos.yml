@@ -21,15 +21,18 @@ acoes:
   - ticker: FLRY3
   - ticker: GGBR4
   - ticker: HAPV3
+  - ticker: HYPE3
   - ticker: INTB3
   - ticker: ITSA4
   - ticker: ITUB3
+  - ticker: ITUB4
   - ticker: JALL3
   - ticker: JBSS3
   - ticker: KEPL3
   - ticker: LEVE3
   - ticker: NEOE3
   - ticker: PETR3
+  - ticker: PETR4
   - ticker: POMO3
   - ticker: POSI3
   - ticker: PRIO3
@@ -42,6 +45,7 @@ acoes:
   - ticker: SBSP3
   - ticker: STBP3
   - ticker: SUZB3
+  - ticker: TGMA3
   - ticker: TOTS3
   - ticker: VALE3
   - ticker: VIVA3
@@ -64,6 +68,7 @@ hibrido:
   - ticker: HGRU11
   - ticker: KNRI11
   - ticker: MAXR11
+  - ticker: RBVA11
   - ticker: TRXF11
 infra:
   spread: 8
@@ -96,6 +101,5 @@ shopping:
   - ticker: HGBS11
   - ticker: HSML11
   - ticker: MALL11
-  - ticker: RBVA11
   - ticker: VISC11
   - ticker: XPML11
