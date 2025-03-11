@@ -105,7 +105,7 @@ class acao:
 
     @property
     def dy(self):
-        return self.acao.info['dividendYield'] if 'dividendYield' in self.acao.info else 0
+        return self.acao.info['dividendYield']/100 if 'dividendYield' in self.acao.info else 0
 
     @property
     def roe(self):
