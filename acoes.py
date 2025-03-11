@@ -12,7 +12,7 @@ class acao:
     def __init__(self, ticker):
         self.ticker = ticker
         self.acao = yf.Ticker(ticker)
-        self.adj_close = yf.download(ticker, period="5y", progress=False)["Adj Close"]
+        self.adj_close = yf.download(ticker, period="5y", progress=False, auto_adjust=False)
 
     def media_ponderada_fechamento(self, ano):
         return trim_mean(self.adj_close.loc[f"{ano}-"].tail(30).values, proportiontocut=0.1)

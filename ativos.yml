@@ -4,6 +4,7 @@ acoes:
   - ticker: ABEV3
   - ticker: AGRO3
   - ticker: ALOS3
+  - ticker: AMER3
   - ticker: B3SA3
   - ticker: BBAS3
   - ticker: BBDC4
@@ -83,6 +84,7 @@ logistica:
   - ticker: GGRC11
   - ticker: HGLG11
   - ticker: HSLG11
+  - ticker: LVBI11
   - ticker: PATL11
   - ticker: XPIN11
   - ticker: XPLG11
