@@ -14,18 +14,6 @@ from ativosYAML import montar_add, montar_remove
 
 st.set_page_config(layout="wide")
 
-# st.markdown(
-#     """
-#     <style>
-#     .main {
-#         max-width: 75%; /* Ajuste o valor aqui para controlar a largura */
-#         margin: 0 auto; /* Centraliza o conteúdo */
-#     }
-#     </style>
-#     """,
-#     unsafe_allow_html=True,
-# )
-
 def refresh_indices():
     now = f"{datetime.datetime.now():%d-%m-%Y}"
     try:
@@ -94,7 +82,7 @@ def fmt_radar_head(tipo):
 
     print("tipo,", tipo)
 
-    col = st.columns(9) if tipo=="acoes" else st.columns(8)
+    col = st.columns(10) if tipo=="acoes" else st.columns(8)
 
 
     with col[0]:
@@ -122,6 +110,8 @@ def fmt_radar_head(tipo):
             st.markdown('**Nota Atual:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
     if tipo == "acoes":
         with col[8]:
+            st.markdown('**Risco:**')
+        with col[9]:
             st.markdown('**Nota Atual:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
 
 
@@ -169,7 +159,7 @@ def fmt_radar_acoes(tipo, data, indice_base, indices):
         ativo = acoes.acao(f"{ticker['ticker']}.SA")
 
 
-        col = st.columns(9)
+        col = st.columns(10)
 
         with col[0]:
             st.info(ativo.ticker.split(".")[0])
@@ -200,6 +190,9 @@ def fmt_radar_acoes(tipo, data, indice_base, indices):
             earning_yield = ativo.earning_yield
             compare_status(earning_yield, indice_base, f"{earning_yield:.2f}%")
         with col[8]:
+            risco = 11 - ativo.risco_geral
+            compare_status(risco, 5, f"{risco}")
+        with col[9]:
             nota = score.evaluate_company(ativo.acao, indice_base)
             compare_status(nota, 5, f"{nota}")
 
