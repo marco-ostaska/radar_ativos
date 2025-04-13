@@ -21,6 +21,9 @@ RUN pip install --no-cache-dir  --upgrade pip \
 
 COPY *.py /app/
 
+COPY config.toml /app/.streamlit/config.toml
+
+
 EXPOSE  8501
 
 # Executar  o streamlit na porta 8501 and --server.headless true

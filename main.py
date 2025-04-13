@@ -82,7 +82,7 @@ def fmt_radar_head(tipo):
 
     print("tipo,", tipo)
 
-    col = st.columns(10) if tipo=="acoes" else st.columns(8)
+    col = st.columns(10) if tipo=="acoes" else st.columns(9)
 
 
     with col[0]:
@@ -107,13 +107,26 @@ def fmt_radar_head(tipo):
         if tipo == "acoes":
             st.markdown('**Earning Yield:**')
         else:
-            st.markdown('**Nota Atual:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
+            st.markdown('**Nota Risco:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
     if tipo == "acoes":
         with col[8]:
-            st.markdown('**Risco:**')
+            st.markdown('**Nota Risco:**')
         with col[9]:
-            st.markdown('**Nota Atual:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
+            st.markdown('**Score:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
+    else:
+        with col[8]:
+            st.markdown('**Score:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
 
+def risco_operacional(tipo):
+    if tipo == "papel":
+        return 8
+    if tipo == "hibrido":
+        return 6
+    if tipo == "shopping":
+        return 4
+    if tipo == "logistica":
+        return 2
+    return 10
 
 
 
@@ -127,7 +140,7 @@ def fmt_radar_fii(tipo, data, indice_base, indices):
         dy_estimado = (fi.dividendo_estimado*100)/fi.cotacao
         teto_div = fi.dividendo_estimado/spread*100
 
-        col = st.columns(8)
+        col = st.columns(9)
 
         with col[0]:
             st.info(fi.ticker.split(".")[0])
@@ -148,6 +161,9 @@ def fmt_radar_fii(tipo, data, indice_base, indices):
             pot = round(((teto_div-fi.cotacao)/fi.cotacao)*100,2)
             compare_status(pot, 0, f"{pot}%")
         with col[7]:
+            risco = 11 - fi.overall_risk(risco_operacional(tipo))
+            compare_status(risco, 5, f"{round(risco,1)}")
+        with col[8]:
             nota = scoreFII.evaluate_fii(fi, indice_base)
             compare_status(nota, 6, f"{nota}")
 

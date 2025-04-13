@@ -76,6 +76,71 @@ class FII:
             return tres_meses *12
         return seis_meses*12
 
+    @property
+    def risco_liquidez(self):
+        if "averageVolume" not in self.info:
+            return 10
+        volume = self.info.get("averageVolume", 0)
+        if volume > 50000:
+            return 1
+        elif volume > 20000:
+            return 5
+        return 10
+
+    @property
+    def risco_tamanho(self):
+        if "marketCap" not in self.info:
+            return 10
+        market_cap = self.info.get("marketCap", 0)
+        if market_cap < 500_000_000:
+            return 5
+        return 1
+
+    @property
+    def risco_preco_volatilidade(self):
+        if "52WeekChange" not in self.info:
+            return 10
+        variacao_52w = self.info.get("52WeekChange", 0)
+        if variacao_52w < -0.15:
+            return 10
+        if variacao_52w < -0.05:
+            return 5
+        return 1
+
+    @property
+    def risco_rendimento(self):
+        if "dividendYield" not in self.info:
+            return 10
+        dy = self.info.get("dividendYield", 0)
+        if dy > 12:
+            return 10
+        if dy > 8:
+            return 5
+        if dy < 7:
+            return 5
+        return 1
+
+    def overall_risk(self, risco_operacional):
+        pesos = {
+            "liquidez": 0.2,
+            "tamanho_fundo": 0.1,
+            "preco_volatilidade": 0.1,
+            "rendimento": 0.3,
+            "operacional": 0.3,
+        }
+
+        overall_risk = (
+            (self.risco_liquidez * pesos["liquidez"]) +
+            (self.risco_preco_volatilidade * pesos["preco_volatilidade"]) +
+            (self.risco_tamanho * pesos["tamanho_fundo"]) +
+            (self.risco_rendimento * pesos["rendimento"]) +
+            (risco_operacional * pesos["operacional"])
+        )
+
+        # Normalizar para escala de 1 a 10
+        return round(min(max(overall_risk, 1), 10),1)
+
+
 
 def convert_unix_date(unix_date):
     date_time = datetime.fromtimestamp(unix_date)
@@ -102,6 +167,11 @@ def main():
 
    # print(f"Histórico de dividendos: {fii.historico_dividendos}")
     print(f"Dividendos: {fii.dividends}")
+    print(f"Risco de Liquidez: {fii.risco_liquidez}")
+    print(f"Risco de Tamanho: {fii.risco_tamanho}")
+    print(f"Risco de Preço e Volatilidade: {fii.risco_preco_volatilidade}")
+    print(f"Risco de Rendimento: {fii.risco_rendimento}")
+    print(f"over all risk: {fii.overall_risk(3)}")
 
 
     # pprint.pprint(fii.info)
