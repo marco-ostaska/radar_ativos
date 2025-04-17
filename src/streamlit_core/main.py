@@ -3,74 +3,32 @@ import json
 import datetime
 import streamlit as st
 import yaml
-import modules.acoes as acoes
-import streamlit_core.acoes_st as acoes_st
-import modules.bancoCentral as bc
-import modules.fii as fii
-import streamlit_core.fii_st as fii_st
-import modules.score as score
-import modules.scoreFII as scoreFII
+import requests
 from pathlib import Path
 
+import streamlit_core.acoes_st as acoes_st
+import streamlit_core.fii_st as fii_st
 from modules.ativosYAML import montar_add, montar_remove
 
-st.set_page_config(layout="wide")
+# st.set_page_config(layout="wide")
 
-def refresh_indices():
-    now = f"{datetime.datetime.now():%d-%m-%Y}"
-    base_dir = Path(__file__).resolve().parents[2]  # sobe dois níveis
-    bc_json = base_dir / 'data' / 'bc.json'
+API_URL = "http://localhost:8000"  # ajuste se necessário
+
+def get_indices():
     try:
-        selic = bc.SELIC(5)
-        ipca = bc.IPCA(5)
-        ipc_a =bc.IPCA(1)
-        data = {
-            'date': now,
-            'selic': selic.media_ganho_real,
-            'selic_atual': selic.atual,
-            'ipca': ipca.media_ganho_real,
-            'ipca_media5': ipca.media_anual,
-            'ipca_atual': ipc_a.media_anual
-        }
-
-        with open(bc_json, 'w') as file:
-            json.dump(data, file)
+        response = requests.get(f"{API_URL}/indices")
+        response.raise_for_status()
+        return response.json()
     except Exception as e:
-        print(e)
-        data = {
-            'date': now,
-            'selic': 0,
-            'ipca': 0,
-            'selic_atual': 0,
-            'ipca_media5': 0,
-            'ipca_atual': 0
+        st.error(f"Erro ao obter índices: {str(e)}")
+        return {
+            'selic': 0, 'ipca': 0,
+            'selic_atual': 0, 'ipca_media5': 0, 'ipca_atual': 0
         }
-    # checa se bc.json existe
-
-    if not os.path.exists(bc_json):
-        with open(bc_json, 'w') as file:
-            json.dump(data, file)
-
-
-def get_indices(force=False):
-    # checa se arquivo bc.json existe
-    try:
-        with open('bc.json') as file:
-            data = json.load(file)
-            if data['date'].split('-')[1] == f"{datetime.datetime.now():%m}" and not force:
-                return data
-            refresh_indices()
-            return get_indices()
-    except FileNotFoundError:
-        refresh_indices()
-        return get_indices()
 
 def melhor_indice():
     indices = get_indices()
-    selic = indices['selic']
-    ipca = indices['ipca']
-    return max(selic, ipca)
-
+    return max(indices['selic'], indices['ipca'])
 
 def compare_status(compare1, compare2, text):
     if compare1 is None or compare2 is None:
@@ -83,218 +41,115 @@ def compare_status(compare1, compare2, text):
         st.error(f"{text}")
 
 def fmt_radar_head(tipo):
+    col = st.columns(10) if tipo == "acoes" else st.columns(9)
+    labels = ["Ativo:", "Cotação:",
+              "cotação x lucro:" if tipo == "acoes" else "Valor Patrimonial:",
+              "Valor Teto por DY:", "DY:", "Rendimento Real:", "Potencial:"]
 
-    print("tipo,", tipo)
+    for i, label in enumerate(labels):
+        with col[i]:
+            st.markdown(f"**{label}**")
 
-    col = st.columns(10) if tipo=="acoes" else st.columns(9)
-
-
-    with col[0]:
-        st.markdown('**Ativo:**')
-    with col[1]:
-        st.markdown('**Cotação:**')
-    with col[2]:
-        if tipo == "acoes":
-            st.markdown('**cotação x lucro:**', help="Se vazio é pq empresa não possiu dados o suficiente, provavelmente é nova")
-        else:
-            st.markdown('**Valor Patrimonial:**')
-    with col[3]:
-        st.markdown('**Valor Teto por DY:**', help="Valor do DY estimado baseado no spread (média IPCA ou Selic, ultimos 5 anos, o que for maior) e no valor do ativo")
-    with col[4]:
-        #st.markdown('**Yield:**', help="Earning Yield para acoes e DY estimado para FII")
-        st.markdown('**DY:**')
-    with col[5]:
-        st.markdown('**Rendimento Real:**', help="Rendimento real do ativo baseado no indice de referencia")
-    with col[6]:
-        st.markdown('**Potencial:**')
-    with col[7]:
-        if tipo == "acoes":
-            st.markdown('**Earning Yield:**')
-        else:
-            st.markdown('**Nota Risco:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
     if tipo == "acoes":
-        with col[8]:
-            st.markdown('**Nota Risco:**')
-        with col[9]:
-            st.markdown('**Score:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
+        with col[7]: st.markdown("**Earning Yield:**")
+        with col[8]: st.markdown("**Nota Risco:**")
+        with col[9]: st.markdown("**Score:**")
     else:
-        with col[8]:
-            st.markdown('**Score:**', help="Nota de 0 a 10, baseada em critérios de análise fundamentalista")
-
-def risco_operacional(tipo):
-    if tipo == "papel":
-        return 8
-    if tipo == "hibrido":
-        return 6
-    if tipo == "shopping":
-        return 4
-    if tipo == "logistica":
-        return 2
-    return 10
-
-
+        with col[7]: st.markdown("**Nota Risco:**")
+        with col[8]: st.markdown("**Score:**")
 
 def fmt_radar_fii(tipo, data, indice_base, indices):
-    fmt_radar_head(tipo)
-
+    fmt_radar_head("fii")
     for ticker in data[tipo]["tickers"]:
-        fi = fii.FII(f"{ticker['ticker']}.SA")
-
-        spread = data[tipo]["spread"] + indice_base
-        dy_estimado = (fi.dividendo_estimado*100)/fi.cotacao
-        teto_div = fi.dividendo_estimado/spread*100
+        ticker_code = ticker['ticker']
+        try:
+            r = requests.get(f"{API_URL}/fii/radar", params={"ticker": ticker_code, "tipo": tipo})
+            r.raise_for_status()
+            fi = r.json()
+        except Exception as e:
+            st.error(f"Erro em {ticker_code}: {e}")
+            continue
 
         col = st.columns(9)
-
-        with col[0]:
-            st.info(fi.ticker.split(".")[0])
-        with col[1]:
-            st.info(f"R$ {fi.cotacao}")
-        with col[2]:
-            compare_status(fi.vpa, fi.cotacao, f"R$ {fi.vpa}")
-        with col[3]:
-            compare_status(teto_div,fi.cotacao,  f"R$ {fi.dividendo_estimado/spread*100:.2f}")
-        with col[4]:
-            compare_status(dy_estimado, spread, f"{dy_estimado:.2f}%")
-        with col[5]:
-            rf_real = (indices['selic_atual'] - (indices['selic_atual'] * 0.15)) - indices['ipca_atual']
-            maior = max(indices['ipca_atual'], rf_real)
-            real = dy_estimado - indices['ipca_atual']
-            compare_status(real, maior, f"{real:.2f}%")
-        with col[6]:
-            pot = round(((teto_div-fi.cotacao)/fi.cotacao)*100,2)
-            compare_status(pot, 0, f"{pot}%")
-        with col[7]:
-            risco = 11 - fi.overall_risk(risco_operacional(tipo))
-            compare_status(risco, 5, f"{round(risco,1)}")
-        with col[8]:
-            nota = scoreFII.evaluate_fii(fi, indice_base)
-            compare_status(nota, 6, f"{nota}")
-
+        with col[0]: st.info(fi['ticker'])
+        with col[1]: st.info(f"R$ {fi['cotacao']}")
+        with col[2]: compare_status(fi['vpa'], fi['cotacao'], f"R$ {fi['vpa']}")
+        with col[3]: compare_status(fi['teto_div'], fi['cotacao'], f"R$ {fi['teto_div']:.2f}")
+        with col[4]: compare_status(fi['dy_estimado'], data[tipo]['spread'] + indice_base, f"{fi['dy_estimado']:.2f}%")
+        with col[5]: compare_status(fi['rendimento_real'], max(indices['ipca_atual'], (indices['selic_atual'] - indices['selic_atual'] * 0.15) - indices['ipca_atual']), f"{fi['rendimento_real']:.2f}%")
+        with col[6]: compare_status(fi['potencial'], 0, f"{fi['potencial']}%")
+        with col[7]: compare_status(fi['nota_risco'], 5, f"{fi['nota_risco']}")
+        with col[8]: compare_status(fi['score'], 6, f"{fi['score']}")
 
 def fmt_radar_acoes(tipo, data, indice_base, indices):
-    fmt_radar_head(tipo)
-
+    fmt_radar_head("acoes")
     for ticker in data[tipo]["tickers"]:
-        ativo = acoes.acao(f"{ticker['ticker']}.SA")
-
+        ticker_code = ticker['ticker']
+        try:
+            r = requests.get(f"{API_URL}/acoes/radar", params={"ticker": ticker_code})
+            r.raise_for_status()
+            ac = r.json()
+        except Exception as e:
+            st.error(f"Erro em {ticker_code}: {e}")
+            continue
 
         col = st.columns(10)
-
-        with col[0]:
-            st.info(ativo.ticker.split(".")[0])
-        with col[1]:
-            st.info(f"R$ {ativo.cotacao}")
-        with col[2]:
-            compare_status(ativo.teto_cotacao_lucro, ativo.cotacao, f"R$ {ativo.teto_cotacao_lucro}")
-        with col[3]:
-            dy_estimado = (ativo.dy_estimado*ativo.cotacao)/(indice_base/100) if ativo.dy_estimado else 0
-            compare_status(dy_estimado, ativo.cotacao, f"R$ { dy_estimado:.2f}")
-        with col[4]:
-            #earning_yield = ativo.earning_yield
-            dy_estimado = (ativo.dy_estimado)*100 if ativo.dy_estimado else 0
-            compare_status(dy_estimado, indice_base, f"{dy_estimado:.2f}%")
-        with col[5]:
-            # earning_yield = ativo.earning_yield
-            rf_real = (indices['selic_atual'] - (indices['selic_atual'] * 0.15)) - indices['ipca_atual']
-            maior = max(indices['ipca_atual'], rf_real)
-            dy_estimado = (ativo.dy_estimado)*100 if ativo.dy_estimado else 0
-            real = dy_estimado - indices['ipca_atual']
-            compare_status(real, maior, f"{real:.2f}%")
-        with col[6]:
-            dy_estimado = (ativo.dy_estimado*ativo.cotacao)/(indice_base/100) if ativo.dy_estimado else 0
-            base = ativo.teto_cotacao_lucro if ativo.teto_cotacao_lucro else dy_estimado
-            potencial = round((((base-ativo.cotacao)/ativo.cotacao)*100),2)
-            compare_status(potencial,0, f"{potencial}%")
-        with col[7]:
-            earning_yield = ativo.earning_yield
-            compare_status(earning_yield, indice_base, f"{earning_yield:.2f}%")
-        with col[8]:
-            risco = 11 - ativo.risco_geral
-            compare_status(risco, 5, f"{risco}")
-        with col[9]:
-            nota = score.evaluate_company(ativo.acao, indice_base)
-            compare_status(nota, 5, f"{nota}")
+        with col[0]: st.info(ac['ticker'])
+        with col[1]: st.info(f"R$ {ac['cotacao']}")
+        with col[2]: compare_status(ac['teto_por_lucro'], ac['cotacao'], f"R$ {ac['teto_por_lucro']}")
+        with col[3]: compare_status(ac['valor_teto_por_dy'], ac['cotacao'], f"R$ {ac['valor_teto_por_dy']}")
+        with col[4]: compare_status(ac['dy_estimado'], indice_base, f"{ac['dy_estimado']:.2f}%")
+        with col[5]: compare_status(ac['rendimento_real'], max(indices['ipca_atual'], (indices['selic_atual'] - indices['selic_atual'] * 0.15) - indices['ipca_atual']), f"{ac['rendimento_real']:.2f}%")
+        with col[6]: compare_status(ac['potencial'], 0, f"{ac['potencial']}%")
+        with col[7]: compare_status(ac['earning_yield'], indice_base, f"{ac['earning_yield']:.2f}%")
+        with col[8]: compare_status(ac['nota_risco'], 5, f"{ac['nota_risco']}")
+        with col[9]: compare_status(ac['score'], 5, f"{ac['score']}")
 
 def fmt_radar_indice(indices):
-
-    # SELIC
     col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.markdown('**Indice**')
-    with col2:
-        st.markdown('**Atual**')
-    with col3:
-            st.markdown('**Média 5 Anos**')
-    with col4:
-        st.markdown('**Juros Real**')
+    with col1: st.markdown('**Indice**')
+    with col2: st.markdown('**Atual**')
+    with col3: st.markdown('**Média 5 Anos**')
+    with col4: st.markdown('**Juros Real**')
 
+    col1, col2, col3, col4 = st.columns(4)
+    with col1: st.info("SELIC")
+    with col2: st.info(f"{indices['selic_atual']}%")
+    with col3: st.info(f"{indices['selic']}%")
+    with col4: st.info(f"{round((indices['selic_atual'] - indices['selic_atual'] * 0.15) - indices['ipca_atual'], 2)}%")
 
-
-    col1, col2, col3, col4= st.columns(4)
-
-    with col1:
-        st.info("SELIC")
-    with col2:
-        st.info(f"{indices['selic_atual']}%")
-    with col3:
-        st.info(f"{indices['selic']}%")
-    with col4:
-        real= (indices['selic_atual'] - (indices['selic_atual'] * 0.15 )) - indices['ipca_atual']
-        st.info(f"{round(real,2)}%")
-
-
-    # IPCA
-
-    col1, col2, col3, col4= st.columns(4)
-
-    with col1:
-        st.info("IPCA")
-    with col2:
-        st.info(f"{indices['ipca_atual']}%")
-    with col3:
-        st.info(f"{indices['ipca_media5']}%")
-    with col4:
-        st.info("N/A")
-
+    col1, col2, col3, col4 = st.columns(4)
+    with col1: st.info("IPCA")
+    with col2: st.info(f"{indices['ipca_atual']}%")
+    with col3: st.info(f"{indices['ipca_media5']}%")
+    with col4: st.info("N/A")
 
 def radar(indice_base):
-
     indices = get_indices()
-    # Botão para forçar o refresh
     if st.button("Atualizar Indices"):
         with st.spinner("Atualizando dados..."):
-            indices = get_indices(force=True)
+            indices = get_indices()
         st.success("Dados atualizados com sucesso!")
     fmt_radar_indice(indices)
 
-    # adicionar o selecionador para acoes ou fii
     sl = st.selectbox("Selecione o tipo de ativo", ["", "FII", "Ações"])
-
-    base_dir = Path(__file__).resolve().parents[2]  # sobe dois níveis
+    base_dir = Path(__file__).resolve().parents[2]
     ativo_arq = base_dir / 'data' / 'ativos.yml'
     with open(ativo_arq, 'r') as file:
         data = yaml.safe_load(file)
 
     st.title("Radar de Ativos")
-
     if sl == "FII":
         for tipo in ["shopping", "logistica", "papel", "hibrido", "fiagro", "infra"]:
             st.subheader(tipo.upper())
             fmt_radar_fii(tipo, data, indice_base, indices)
-
     if sl == "Ações":
         st.markdown("---")
         st.subheader("Ações")
         fmt_radar_acoes("acoes", data, indice_base, indices)
-        # fmt_radar("acoes", data)
-
 
 def iniciar():
-
     indice_base = melhor_indice()
-
-    # Caixa de texto para escolher o ativo
     st.sidebar.title("Consulta de Ativos")
     chk_radio = st.sidebar.radio("Selecione o tipo de ativo", ["FII", "Ações"], index=0)
     if ticker := st.sidebar.text_input('Digite o ticker do FII', help="Exemplo: HGLG11"):
@@ -306,19 +161,13 @@ def iniciar():
         st.sidebar.warning("Por favor, insira o ticker de um FII para obter as informações.")
         radar(indice_base)
 
-
-    # adicionar opt de upload para subistituir o ativos.yml
     st.sidebar.markdown("---")
     st.sidebar.title("Configurações")
-
     cfg = st.sidebar.selectbox("Selecione a opção", ["", "Adicionar Ativos", "Remover Ativos"], index=0)
     if cfg == "Adicionar Ativos":
         montar_add()
     elif cfg == "Remover Ativos":
         montar_remove()
-
-
-
 
 if __name__ == "__main__":
     iniciar()
