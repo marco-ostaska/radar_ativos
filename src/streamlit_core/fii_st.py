@@ -1,5 +1,5 @@
-import fii
-import scoreFII
+import modules.fii as fii
+import modules.scoreFII as scoreFII
 import streamlit as st
 
 

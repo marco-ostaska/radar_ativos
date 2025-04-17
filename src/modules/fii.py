@@ -1,5 +1,5 @@
 import yfinance as yf
-import investidor10
+import modules.investidor10 as investidor10
 from datetime import datetime
 import numpy as np
 

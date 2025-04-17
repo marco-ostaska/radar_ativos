@@ -1,11 +1,11 @@
 from calendar import c
 import yfinance as yf
 import pandas as pd
-import fii
+import modules.fii as fii
 import yaml
 from scipy.stats import trim_mean
 from math import sqrt
-import score
+import modules.score as score
 
 
 class acao:

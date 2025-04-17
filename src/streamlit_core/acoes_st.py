@@ -1,5 +1,5 @@
-import acoes
-import score
+import modules.acoes as acoes
+import modules.score as score
 import streamlit as st
 
 

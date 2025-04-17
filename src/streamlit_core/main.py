@@ -3,19 +3,23 @@ import json
 import datetime
 import streamlit as st
 import yaml
-import acoes
-import acoes_st
-import bancoCentral as bc
-import fii
-import fii_st
-import score
-import scoreFII
-from ativosYAML import montar_add, montar_remove
+import modules.acoes as acoes
+import streamlit_core.acoes_st as acoes_st
+import modules.bancoCentral as bc
+import modules.fii as fii
+import streamlit_core.fii_st as fii_st
+import modules.score as score
+import modules.scoreFII as scoreFII
+from pathlib import Path
+
+from modules.ativosYAML import montar_add, montar_remove
 
 st.set_page_config(layout="wide")
 
 def refresh_indices():
     now = f"{datetime.datetime.now():%d-%m-%Y}"
+    base_dir = Path(__file__).resolve().parents[2]  # sobe dois níveis
+    bc_json = base_dir / 'data' / 'bc.json'
     try:
         selic = bc.SELIC(5)
         ipca = bc.IPCA(5)
@@ -29,7 +33,7 @@ def refresh_indices():
             'ipca_atual': ipc_a.media_anual
         }
 
-        with open('bc.json', 'w') as file:
+        with open(bc_json, 'w') as file:
             json.dump(data, file)
     except Exception as e:
         print(e)
@@ -43,8 +47,8 @@ def refresh_indices():
         }
     # checa se bc.json existe
 
-    if not os.path.exists('bc.json'):
-        with open('bc.json', 'w') as file:
+    if not os.path.exists(bc_json):
+        with open(bc_json, 'w') as file:
             json.dump(data, file)
 
 
@@ -267,8 +271,9 @@ def radar(indice_base):
     # adicionar o selecionador para acoes ou fii
     sl = st.selectbox("Selecione o tipo de ativo", ["", "FII", "Ações"])
 
-
-    with open('ativos.yml', 'r') as file:
+    base_dir = Path(__file__).resolve().parents[2]  # sobe dois níveis
+    ativo_arq = base_dir / 'data' / 'ativos.yml'
+    with open(ativo_arq, 'r') as file:
         data = yaml.safe_load(file)
 
     st.title("Radar de Ativos")
@@ -285,7 +290,7 @@ def radar(indice_base):
         # fmt_radar("acoes", data)
 
 
-def main():
+def iniciar():
 
     indice_base = melhor_indice()
 
@@ -316,4 +321,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    iniciar()
