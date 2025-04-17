@@ -17,7 +17,7 @@ class Ativos:
         return BeautifulSoup(content.content, 'html.parser', from_encoding='utf-8')
 
 
-class FI_INFRA(Ativos):
+class FII(Ativos):
 
     def __init__(self, ticker):
         self.ticker = ticker.upper()

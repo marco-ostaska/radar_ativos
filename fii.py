@@ -149,7 +149,7 @@ def convert_unix_date(unix_date):
 
 def get_investidor10(ticker):
     ticker= ticker.split(".")[0]
-    return investidor10.FI_INFRA(ticker)
+    return investidor10.FII(ticker)
 
 def main():
     fii = FII('HSML11.SA')
