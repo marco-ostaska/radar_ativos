@@ -94,9 +94,10 @@ def obter_dados_fii(
     tipos_validos = ["shopping", "logistica", "papel", "hibrido", "fiagro", "infra"]
     if tipo not in tipos_validos:
         raise HTTPException(status_code=400, detail=f"Tipo inválido. Use um de: {', '.join(tipos_validos)}")
-
+    base_dir = Path(__file__).resolve().parents[1]  # sobe dois níveis
+    ativo_arq = base_dir / 'data' / 'ativos.yml'
     try:
-        with open("ativos.yml", "r") as file:
+        with open(ativo_arq, "r") as file:
             data = yaml.safe_load(file)
 
         tipo_data = data.get(tipo)
@@ -147,9 +148,10 @@ def get_fii_detalhado(
     tipos_validos = ["shopping", "logistica", "papel", "hibrido", "fiagro", "infra"]
     if tipo not in tipos_validos:
         raise HTTPException(status_code=400, detail=f"Tipo inválido. Use um de: {', '.join(tipos_validos)}")
-
+    base_dir = Path(__file__).resolve().parents[1]  # sobe dois níveis
+    ativo_arq = base_dir / 'data' / 'ativos.yml'
     try:
-        with open("ativos.yml", "r") as file:
+        with open(ativo_arq, "r") as file:
             data = yaml.safe_load(file)
 
         tipo_data = data.get(tipo)
@@ -252,6 +254,7 @@ def obter_detalhes_acao(
             "lucro": acao_obj.lucro,
             "free_float": acao_obj.free_float,
             "pl": acao_obj.pl,
+            "teto_por_lucro": round(acao_obj.teto_cotacao_lucro, 2) if acao_obj.teto_cotacao_lucro else None,
             "cotas_necessarias_para_1000_mensais": cota_necessaria,
             "investimento_necessario_para_1000_mensais": round(investimento_necessario, 2)
         }

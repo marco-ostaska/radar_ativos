@@ -1,97 +1,84 @@
 import streamlit as st
 import yaml
+from pathlib import Path
+import requests
 
-# Função para carregar os dados do arquivo YAML
+base_dir = Path(__file__).resolve().parents[2]
+ativo_arq = base_dir / "data" / "ativos.yml"
+
 def load_data():
-    with open("ativos.yml", "r") as file:
-        data = yaml.safe_load(file)
-    return data
+    with open(ativo_arq, "r") as file:
+        return yaml.safe_load(file)
 
-# Função para salvar os dados no arquivo YAML
 def save_data(data):
-    with open("ativos.yml", "w") as file:
+    with open(ativo_arq, "w") as file:
         yaml.safe_dump(data, file)
 
-# Função para adicionar um ativo
 def add_ativo(ticker, categoria):
     data = load_data()
     if categoria not in data:
         data[categoria] = {"spread": 0, "tickers": []}
 
-    # Verificar se o ticker já existe na categoria
-    tickers = [item["ticker"] for item in data[categoria]["tickers"]]
-    if ticker in tickers:
-        return False  # Retorna False se o ticker já existir
+    if any(item["ticker"] == ticker for item in data[categoria]["tickers"]):
+        return False
 
     data[categoria]["tickers"].append({"ticker": ticker})
-
-    # Remover duplicados e ordenar os tickers
-    unique_tickers = {item["ticker"]: item for item in data[categoria]["tickers"]}.values()
-    data[categoria]["tickers"] = sorted(unique_tickers, key=lambda x: x["ticker"])
+    data[categoria]["tickers"] = sorted(
+        {item["ticker"]: item for item in data[categoria]["tickers"]}.values(),
+        key=lambda x: x["ticker"]
+    )
 
     save_data(data)
-    return True  # Retorna True se o ticker for adicionado com sucesso
+    return True
 
-# Função para remover um ativo
 def remove_ativo(ticker, categoria):
     data = load_data()
     if categoria in data:
+        original_len = len(data[categoria]["tickers"])
         data[categoria]["tickers"] = [item for item in data[categoria]["tickers"] if item["ticker"] != ticker]
-        save_data(data)
-        return True  # Retorna True se o ticker for removido com sucesso
-    return False  # Retorna False se a categoria não existir ou o ticker não for encontrado
+        if len(data[categoria]["tickers"]) != original_len:
+            save_data(data)
+            return True
+    return False
 
 def montar_add():
-    # Interface do Streamlit
     st.title("Adicionar Ativos")
-
-    # Formulário para entrada de dados
     with st.form(key="add_ativo_form"):
         ticker = st.text_input("Ticker")
-        categoria = st.selectbox("Categoria", ["agro", "infra", "shopping", "logistica", "acoes", "hibrido"])
-        submit_button = st.form_submit_button(label="Adicionar Ativo")
+        categoria = st.selectbox("Categoria", ["agro", "infra", "shopping", "logistica", "acoes", "hibrido", "papel"])
+        submit = st.form_submit_button("Adicionar Ativo")
 
-    # Ação ao submeter o formulário
-    if submit_button:
+    if submit:
         if add_ativo(ticker, categoria):
             st.success(f"Ativo {ticker} adicionado à categoria {categoria}.")
         else:
             st.error(f"Ativo {ticker} já existe na categoria {categoria}.")
 
-    # Exibir a lista atualizada de ativos
     st.header("Lista de Ativos")
-    data = load_data()
-    st.write(data)
+    st.write(load_data())
 
 def montar_remove():
-    # Interface do Streamlit
     st.title("Remover Ativos")
-
-    # Formulário para remoção de dados
     with st.form(key="remove_ativo_form"):
         ticker = st.text_input("Ticker")
-        categoria = st.selectbox("Categoria", ["agro", "infra", "shopping", "logistica", "acoes", "hibrido"])
-        submit_button = st.form_submit_button(label="Remover Ativo")
+        categoria = st.selectbox("Categoria", ["agro", "infra", "shopping", "logistica", "acoes", "hibrido", "papel"])
+        submit = st.form_submit_button("Remover Ativo")
 
-    # Ação ao submeter o formulário
-    if submit_button:
+    if submit:
         if remove_ativo(ticker, categoria):
             st.success(f"Ativo {ticker} removido da categoria {categoria}.")
         else:
             st.error(f"Ativo {ticker} não encontrado na categoria {categoria}.")
 
-    # Exibir a lista atualizada de ativos
     st.header("Lista de Ativos")
-    data = load_data()
-    st.write(data)
+    st.write(load_data())
 
 def main():
     st.sidebar.title("Menu")
-    option = st.sidebar.selectbox("Escolha uma opção", ["Adicionar Ativo", "Remover Ativo"])
-
-    if option == "Adicionar Ativo":
+    opcao = st.sidebar.selectbox("Escolha uma opção", ["Adicionar Ativo", "Remover Ativo"])
+    if opcao == "Adicionar Ativo":
         montar_add()
-    elif option == "Remover Ativo":
+    elif opcao == "Remover Ativo":
         montar_remove()
 
 if __name__ == "__main__":
