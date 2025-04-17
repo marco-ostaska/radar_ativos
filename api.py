@@ -1,19 +1,17 @@
+import os
+import json
+from datetime import datetime, timedelta
 from fastapi import FastAPI, HTTPException, Query
 from investidor10 import FII as I10FII
 import fii
 import scoreFII
 import yaml
 from bancoCentral import SELIC, IPCA
-from datetime import datetime
-import time
 
 app = FastAPI()
 
-# Cache dos índices
-_indices_cache = None
-_cache_timestamp = 0
-_CACHE_TTL = 60 * 60 * 24  # 24 horas
-
+INDICES_CACHE_FILE = "bc.json"
+CACHE_DIAS_VALIDO = 30
 
 def risco_operacional(tipo):
     if tipo == "papel":
@@ -26,38 +24,50 @@ def risco_operacional(tipo):
         return 2
     return 10
 
-
 def get_indices():
-    global _indices_cache, _cache_timestamp
-    now = time.time()
-
-    if _indices_cache and (now - _cache_timestamp) < _CACHE_TTL:
-        return _indices_cache
+    if os.path.exists(INDICES_CACHE_FILE):
+        with open(INDICES_CACHE_FILE) as f:
+            data = json.load(f)
+            try:
+                data_date = datetime.strptime(data['date'], "%Y-%m-%d")
+                if datetime.now() - data_date < timedelta(days=CACHE_DIAS_VALIDO):
+                    return data
+            except:
+                pass
 
     try:
         selic = SELIC(5)
         ipca = IPCA(5)
         ipc_a = IPCA(1)
 
-        _indices_cache = {
+        data = {
+            'date': datetime.now().strftime("%Y-%m-%d"),
             'selic': selic.media_ganho_real,
             'selic_atual': selic.atual,
             'ipca': ipca.media_ganho_real,
             'ipca_media5': ipca.media_anual,
             'ipca_atual': ipc_a.media_anual
         }
-        _cache_timestamp = now
-        return _indices_cache
+
+        with open(INDICES_CACHE_FILE, "w") as f:
+            json.dump(data, f)
+
+        return data
     except Exception as e:
         raise RuntimeError(f"Erro ao buscar índices: {str(e)}")
-
 
 def melhor_indice():
     indices = get_indices()
     return max(indices['selic'], indices['ipca'])
 
-
-# ----------------------------- ENDPOINTS -----------------------------
+@app.get("/indices")
+def get_indices_endpoint(force: bool = Query(False, description="Força atualização dos dados")):
+    if force and os.path.exists(INDICES_CACHE_FILE):
+        os.remove(INDICES_CACHE_FILE)
+    try:
+        return get_indices()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/investidor10/fii/{ticker}")
 def get_fii_info(ticker: str):
@@ -71,7 +81,6 @@ def get_fii_info(ticker: str):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
-
 
 @app.get("/fii/radar")
 def obter_dados_fii(
@@ -164,7 +173,6 @@ def get_fii_detalhado(
         cotas_necessarias = round(12000 / fi.dividendo_estimado, 2)
         investimento_necessario = round(cotas_necessarias * fi.cotacao, 2)
 
-
         return {
             "ticker": fi.ticker.split(".")[0],
             "cotacao": round(fi.cotacao, 2),
@@ -186,29 +194,11 @@ def get_fii_detalhado(
             "score": nota,
             "indice_base": indice_base,
             "spread_usado": spread_total,
-            "historico_dividendos": {
-                k: round(v, 4) for k, v in fi.historico_dividendos.items()
-            },
+            "historico_dividendos": {k: round(v, 4) for k, v in fi.historico_dividendos.items()},
             "raw_dividends": fi.dividends.tail(12).to_dict(),
             "cotas_necessarias_para_1000_mensais": cotas_necessarias,
             "investimento_necessario_para_1000_mensais": investimento_necessario
-
         }
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-
-@app.get("/indices")
-def get_indices_endpoint(force: bool = Query(False, description="Força atualização dos dados")):
-    global _indices_cache, _cache_timestamp
-
-    if force:
-        _indices_cache = None
-        _cache_timestamp = 0
-
-    try:
-        return get_indices()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
