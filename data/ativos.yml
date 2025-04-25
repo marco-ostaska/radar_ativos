@@ -1,6 +1,7 @@
 acoes:
   spread: 0
   tickers:
+  - ticker: CMIG4
   - ticker: ABEV3
   - ticker: AGRO3
   - ticker: ALOS3
@@ -11,7 +12,6 @@ acoes:
   - ticker: BBSE3
   - ticker: CAML3
   - ticker: CCRO3
-  - ticker: CMIG4
   - ticker: CPFE3
   - ticker: CSMG3
   - ticker: CXSE3
